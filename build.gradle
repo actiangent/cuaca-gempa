@@ -1,0 +1,25 @@
+buildscript {
+    ext {
+        // Sdk
+        compileSdkVersion = 33
+        minSdkVersion = 23
+        targetSdkVersion = 33
+
+        composeCompilerVersion = '1.4.4'
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath libs.android.gradlePlugin
+        classpath libs.kotlin.gradlePlugin
+        classpath libs.hilt
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
