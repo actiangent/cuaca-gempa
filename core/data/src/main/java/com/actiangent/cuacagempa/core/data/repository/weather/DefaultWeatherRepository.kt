@@ -9,7 +9,6 @@ import com.actiangent.cuacagempa.core.model.Weather
 import com.actiangent.cuacagempa.core.network.RemoteWeatherDataSource
 import com.actiangent.cuacagempa.core.network.model.NetworkWeatherArea
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

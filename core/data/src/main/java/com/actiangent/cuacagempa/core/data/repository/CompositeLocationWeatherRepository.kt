@@ -1,10 +1,10 @@
 package com.actiangent.cuacagempa.core.data.repository
 
+import android.util.Log
 import com.actiangent.cuacagempa.core.common.result.Result
 import com.actiangent.cuacagempa.core.data.networkBoundResource
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.WeatherRepository
-import com.actiangent.cuacagempa.core.model.TemperaturePreferences
 import com.actiangent.cuacagempa.core.model.UserLocationWeather
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -16,33 +16,40 @@ class CompositeLocationWeatherRepository @Inject constructor(
 
     override val forceRequest = MutableStateFlow(true)
 
-    private val userLocationData = userDataRepository.userLocationData
-        .distinctUntilChanged { old, new ->
-            ((old.latitude == new.latitude) and (old.longitude == new.longitude)) or (old.province == new.province)
+    private val userData = userDataRepository.userData
+        .onEach {
+            Log.d("weathers", "userData: $it")
+        }
+        .takeWhile { userData ->
+            userData.isLocationCached
         }
 
     override fun observeWeathers(): Flow<Result<UserLocationWeather>> = combine(
-        userLocationData, userDataRepository.districtId, forceRequest
-    ) { locationCache, districtId, forceRequest ->
+        userData, forceRequest
+    ) { userData, forceRequest ->
         val weathers = networkBoundResource(getLocalData = {
             weatherRepository.getLocalCurrentDistrictWeathers(
-                districtId,
-                TemperaturePreferences.CELSIUS.name
+                userData.districtId,
+                userData.temperatureOption.name
             )
         }, shouldFetch = {
-            locationCache.isLocationCached and forceRequest
+            forceRequest
         }, requestFromNetwork = {
             weatherRepository.fetchCurrentDistrictWeathers(
-                locationCache.latitude!!,
-                locationCache.longitude!!,
-                locationCache.province!!,
+                userData.latitude,
+                userData.longitude,
+                userData.provinceEndpoint,
             )
         }, saveNetworkRequest = { data ->
+            Log.d("weathers", "districtId: ${data.first.districtId}")
             data.first.districtId.also { userDataRepository.setDistrictId(it) }
             weatherRepository.insertCurrentDistrictWeathers(data)
         })
 
-        UserLocationWeather(locationCache.province ?: "", weathers)
+        Log.d("weathers", "forceRequest: $forceRequest")
+        Log.d("weathers", "userData: $userData")
+
+        UserLocationWeather(userData.provinceEndpoint, weathers)
     }.map {
         if (it.weathers.isEmpty()) {
             forceUpdate()

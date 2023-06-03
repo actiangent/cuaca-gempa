@@ -2,7 +2,6 @@ package com.actiangent.cuacagempa.core.network.model
 
 import com.tickaroo.tikxml.annotation.*
 import kotlinx.datetime.Instant
-import java.util.*
 
 @Xml(name = "data")
 data class NetworkWeatherData(

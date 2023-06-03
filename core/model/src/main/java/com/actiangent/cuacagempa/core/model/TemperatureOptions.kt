@@ -1,5 +1,5 @@
 package com.actiangent.cuacagempa.core.model
 
-enum class TemperaturePreferences {
+enum class TemperatureOptions {
     CELSIUS, FAHRENHEIT
 }

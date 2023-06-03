@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.actiangent.cuacagempa.core.datastore";
+option java_multiple_files = true;
+
+message LatLonProto {
+  // Latitude in degree, range from -90.0 to 90.0
+  double latitude = 1;
+
+  // Longitude in degree, range from -180.0 to 180.0
+  double longitude = 2;
+}

@@ -66,10 +66,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DisposableEffect(uiState) {
-                when (val state = uiState) {
+                when (uiState) {
                     is MainActivityUiState.Success -> {
                         // if (!state.data.isLocationCached) {
-                            safeRequestLocation()
+                        safeRequestLocation()
                         // }
                     }
                     else -> Unit

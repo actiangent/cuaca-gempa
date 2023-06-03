@@ -1,28 +1,30 @@
 package com.actiangent.cuacagempa.core.data.repository.preferences
 
-import com.actiangent.cuacagempa.core.data.model.UserLocationData
-import com.actiangent.cuacagempa.core.data.preferences.WeatherQuakeDataStore
+import com.actiangent.cuacagempa.core.datastore.WeatherQuakePreferencesDataSource
+import com.actiangent.cuacagempa.core.model.TemperatureOptions
+import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DefaultUserDataRepository @Inject constructor(
-    private val weatherQuakeDataStore: WeatherQuakeDataStore
+    private val weatherQuakePreferences: WeatherQuakePreferencesDataSource
 ) : UserDataRepository {
 
-    override val userLocationData: Flow<UserLocationData> = weatherQuakeDataStore.userLocationData
+    override val userData: Flow<UserData> = weatherQuakePreferences.userData
 
-    override val districtId: Flow<String> = weatherQuakeDataStore.districtId
-
-    override suspend fun setLocationCoordinate(coordinate: Pair<Double, Double>) {
-        weatherQuakeDataStore.setLocationCoordinate(coordinate)
+    override suspend fun setLatitudeLongitude(latitude: Double, longitude: Double) {
+        weatherQuakePreferences.setLatitudeLongitude(latitude, longitude)
     }
 
-    override suspend fun setLocationProvince(province: String?) {
-        weatherQuakeDataStore.setProvinceName(province)
+    override suspend fun setProvinceEndpoint(endpoint: String?) {
+        endpoint?.let { weatherQuakePreferences.setProvinceEndpoint(it) }
     }
 
     override suspend fun setDistrictId(districtId: String) {
-        weatherQuakeDataStore.setDistrictId(districtId)
+        weatherQuakePreferences.setDistrictId(districtId)
+    }
+
+    override suspend fun setTemperatureOption(option: TemperatureOptions) {
+        weatherQuakePreferences.setTemperatureOption(option)
     }
 }

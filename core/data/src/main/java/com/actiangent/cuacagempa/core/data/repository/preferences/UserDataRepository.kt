@@ -1,18 +1,19 @@
 package com.actiangent.cuacagempa.core.data.repository.preferences
 
-import com.actiangent.cuacagempa.core.data.model.UserLocationData
+import com.actiangent.cuacagempa.core.model.TemperatureOptions
+import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataRepository {
 
-    val userLocationData: Flow<UserLocationData>
+    val userData: Flow<UserData>
 
-    val districtId: Flow<String>
+    suspend fun setLatitudeLongitude(latitude: Double, longitude: Double)
 
-    suspend fun setLocationCoordinate(coordinate: Pair<Double, Double>)
-
-    suspend fun setLocationProvince(province: String?)
+    suspend fun setProvinceEndpoint(endpoint: String?)
 
     suspend fun setDistrictId(districtId: String)
+
+    suspend fun setTemperatureOption(options: TemperatureOptions)
 
 }

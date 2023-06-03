@@ -5,8 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.actiangent.cuacagempa.core.designsystem.R
-import com.actiangent.cuacagempa.core.designsystem.icon.Icon.ImageVectorIcon
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.DrawableResourceIcon
+import com.actiangent.cuacagempa.core.designsystem.icon.Icon.ImageVectorIcon
 
 object WeatherQuakeIcons {
 

@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.actiangent.cuacagempa.core.common.result.Result
 import com.actiangent.cuacagempa.core.data.repository.LocationWeatherRepository
-import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
-import com.actiangent.cuacagempa.core.data.repository.weather.WeatherRepository
 import com.actiangent.cuacagempa.core.model.UserLocationWeather
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel

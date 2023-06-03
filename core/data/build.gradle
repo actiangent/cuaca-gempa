@@ -40,9 +40,8 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:database"))
+    implementation(project(":core:datastore"))
     implementation(project(":core:location"))
-
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     implementation libs.androidx.core.ktx
     implementation libs.kotlinx.coroutines.android

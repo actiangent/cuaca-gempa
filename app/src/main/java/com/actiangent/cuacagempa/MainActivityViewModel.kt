@@ -3,9 +3,9 @@ package com.actiangent.cuacagempa
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.actiangent.cuacagempa.core.data.domain.UpdateLocationUseCase
-import com.actiangent.cuacagempa.core.data.model.UserLocationData
 import com.actiangent.cuacagempa.core.data.repository.location.LocationRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
+import com.actiangent.cuacagempa.core.model.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 sealed interface MainActivityUiState {
     object Loading : MainActivityUiState
-    data class Success(val data: UserLocationData) : MainActivityUiState
+    data class Success(val data: UserData) : MainActivityUiState
 }
 
 data class WeatherQuakeErrorState(
@@ -30,7 +30,7 @@ class MainActivityViewModel @Inject constructor(
     private val _locationRequestError: MutableStateFlow<String?> = MutableStateFlow(null)
     private val _showPermissionDialog: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userLocationData.map {
+    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
         MainActivityUiState.Success(it)
     }.stateIn(
         scope = viewModelScope,

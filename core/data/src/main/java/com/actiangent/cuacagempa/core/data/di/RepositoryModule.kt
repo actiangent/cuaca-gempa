@@ -1,7 +1,6 @@
 package com.actiangent.cuacagempa.core.data.di
 
 import android.location.Geocoder
-import com.actiangent.cuacagempa.core.data.preferences.WeatherQuakeDataStore
 import com.actiangent.cuacagempa.core.data.repository.CompositeLocationWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.LocationWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.location.DefaultLocationRepository
@@ -11,6 +10,7 @@ import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataReposi
 import com.actiangent.cuacagempa.core.data.repository.weather.DefaultWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.WeatherRepository
 import com.actiangent.cuacagempa.core.database.dao.WeatherDao
+import com.actiangent.cuacagempa.core.datastore.WeatherQuakePreferencesDataSource
 import com.actiangent.cuacagempa.core.location.LocationProvider
 import com.actiangent.cuacagempa.core.network.RemoteWeatherDataSource
 import dagger.Module
@@ -26,8 +26,8 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideUserDataRepository(
-        dataStore: WeatherQuakeDataStore
-    ): UserDataRepository = DefaultUserDataRepository(dataStore)
+        preferencesDataSource: WeatherQuakePreferencesDataSource
+    ): UserDataRepository = DefaultUserDataRepository(preferencesDataSource)
 
     @Singleton
     @Provides

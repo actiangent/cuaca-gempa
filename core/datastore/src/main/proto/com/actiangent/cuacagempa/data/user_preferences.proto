@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "com/actiangent/cuacagempa/data/latlon.proto";
+import "com/actiangent/cuacagempa/data/temperature_options.proto";
+
+option java_package = "com.actiangent.cuacagempa.core.datastore";
+option java_multiple_files = true;
+
+message UserPreferences {
+
+  LatLonProto coordinate = 1;
+  string province_endpoint = 2;
+  string district_id = 3;
+
+  TemperatureOptionsProto temperature_option = 4;
+
+}

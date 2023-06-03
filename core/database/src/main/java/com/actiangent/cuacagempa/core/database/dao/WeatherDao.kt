@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.*
 import com.actiangent.cuacagempa.core.database.model.*
 import com.actiangent.cuacagempa.core.model.*
-import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 
 @Dao
