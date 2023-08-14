@@ -1,8 +1,10 @@
 package com.actiangent.cuacagempa.core.data.di
 
 import android.location.Geocoder
-import com.actiangent.cuacagempa.core.data.repository.CompositeLocationWeatherRepository
-import com.actiangent.cuacagempa.core.data.repository.LocationWeatherRepository
+import com.actiangent.cuacagempa.core.common.dispatcher.Dispatcher
+import com.actiangent.cuacagempa.core.common.dispatcher.WeatherQuakeDispatchers.IO
+import com.actiangent.cuacagempa.core.data.repository.CompositeDistrictWeatherRepository
+import com.actiangent.cuacagempa.core.data.repository.DistrictWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.location.DefaultLocationRepository
 import com.actiangent.cuacagempa.core.data.repository.location.LocationRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.DefaultUserDataRepository
@@ -17,6 +19,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -32,9 +35,10 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideWeatherRepository(
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
         remoteWeatherDataSource: RemoteWeatherDataSource,
         weatherDao: WeatherDao
-    ): WeatherRepository = DefaultWeatherRepository(remoteWeatherDataSource, weatherDao)
+    ): WeatherRepository = DefaultWeatherRepository(ioDispatcher, remoteWeatherDataSource, weatherDao)
 
     @Singleton
     @Provides
@@ -47,10 +51,10 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLocationWeatherRepository(
+    fun provideDistrictWeatherRepository(
         weatherRepository: WeatherRepository,
         userDataRepository: UserDataRepository
-    ): LocationWeatherRepository = CompositeLocationWeatherRepository(
+    ): DistrictWeatherRepository = CompositeDistrictWeatherRepository(
         weatherRepository, userDataRepository
     )
 

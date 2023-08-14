@@ -9,8 +9,8 @@ option java_multiple_files = true;
 message UserPreferences {
 
   LatLonProto coordinate = 1;
-  string province_endpoint = 2;
-  string district_id = 3;
+  string province = 2;
+  string area_id = 3;
 
   TemperatureOptionsProto temperature_option = 4;
 

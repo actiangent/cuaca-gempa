@@ -10,9 +10,9 @@ interface UserDataRepository {
 
     suspend fun setLatitudeLongitude(latitude: Double, longitude: Double)
 
-    suspend fun setProvinceEndpoint(endpoint: String?)
+    suspend fun setProvince(province: String?)
 
-    suspend fun setDistrictId(districtId: String)
+    suspend fun setAreaId(areaId: String)
 
     suspend fun setTemperatureOption(options: TemperatureOptions)
 

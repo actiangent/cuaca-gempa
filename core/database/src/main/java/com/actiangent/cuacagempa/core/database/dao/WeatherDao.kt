@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.*
 import com.actiangent.cuacagempa.core.database.model.*
 import com.actiangent.cuacagempa.core.model.*
+import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 
 @Dao
@@ -15,7 +16,7 @@ interface WeatherDao {
             strftime('%Y-%m-%dT%H:%M:%S', weather_table.timestamp, 'localtime') AS timestamp,
             weather_table.code AS code,
             (CASE 
-                WHEN LOWER(:temperaturePreferences) = 'celsius' THEN weather_table.celsius 
+                WHEN LOWER(:temperaturePreference) = 'celsius' THEN weather_table.celsius 
                 ELSE weather_table.fahrenheit 
             END) AS temperature,
             weather_table.humidity AS humidity
@@ -26,7 +27,7 @@ interface WeatherDao {
             FROM
                 district_table
             WHERE
-                district_id = :currentDistrictId
+                district_id IN (:districtIds)
             LIMIT 1
             ) AS district_table
         JOIN
@@ -37,16 +38,17 @@ interface WeatherDao {
             DATE(timestamp) >= DATE('now')
         """
     )
-    suspend fun getCurrentDistrictWeathers(
-        currentDistrictId: String,
-        temperaturePreferences: String,
-    ): List<Weather>
+    fun getCurrentWeathers(
+        districtIds: Set<String>,
+        temperaturePreference: String,
+    ): Flow<List<Weather>>
 
     @Transaction
     suspend fun insertDistrictWeathers(district: DistrictEntity, weathers: List<WeatherEntity>) {
         val districtRecordId = try {
             insertDistrict(district)
         } catch (_: SQLiteConstraintException) {
+            // An item that has same districtId
             getDistrictRecordId(district.districtId)
         }
         if (districtRecordId < 0) throw IOException("Error inserting to database")

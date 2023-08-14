@@ -16,15 +16,15 @@ class DefaultUserDataRepository @Inject constructor(
         weatherQuakePreferences.setLatitudeLongitude(latitude, longitude)
     }
 
-    override suspend fun setProvinceEndpoint(endpoint: String?) {
-        endpoint?.let { weatherQuakePreferences.setProvinceEndpoint(it) }
+    override suspend fun setProvince(province: String?) {
+        province?.let { weatherQuakePreferences.setProvince(it) }
     }
 
-    override suspend fun setDistrictId(districtId: String) {
-        weatherQuakePreferences.setDistrictId(districtId)
+    override suspend fun setAreaId(areaId: String) {
+        weatherQuakePreferences.setAreaId(areaId)
     }
 
-    override suspend fun setTemperatureOption(option: TemperatureOptions) {
-        weatherQuakePreferences.setTemperatureOption(option)
+    override suspend fun setTemperatureOption(options: TemperatureOptions) {
+        weatherQuakePreferences.setTemperatureOption(options)
     }
 }

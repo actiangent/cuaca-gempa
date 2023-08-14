@@ -50,8 +50,8 @@ fun WeatherScreen(
                 // TODO - display loading state
             }
             is WeatherUiState.Success -> {
-                val placeName = uiState.data.placeName
-                val weathers = uiState.data.weathers
+                val placeName = uiState.placeName
+                val weathers = uiState.weathers
                 val todayWeatherForecast = weathers[0]
 
                 Row(

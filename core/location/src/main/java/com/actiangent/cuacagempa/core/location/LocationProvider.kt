@@ -7,9 +7,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
+import androidx.annotation.WorkerThread
 import com.google.android.gms.location.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
+import java.util.concurrent.Executor
 
 @Suppress("deprecation")
 @SuppressLint("MissingPermission") // still should request location permissions
@@ -20,7 +21,10 @@ class LocationProvider(context: Context) {
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     // one-shot request current location
-    suspend fun awaitCurrentLocation(): Location = suspendCancellableCoroutine { continuation ->
+    @WorkerThread
+    suspend fun awaitCurrentLocation(
+        executor: Executor
+    ): Location = suspendCancellableCoroutine { continuation ->
 
         // implement android.location.LocationListener#onLocationChanged
         val callback = object : LocationListener {
@@ -35,6 +39,7 @@ class LocationProvider(context: Context) {
                 LocationManager.GPS_PROVIDER,
                 0L,
                 0f,
+                executor,
                 callback
             )
         } else {

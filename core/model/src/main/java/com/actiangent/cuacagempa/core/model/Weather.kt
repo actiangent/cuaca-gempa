@@ -8,10 +8,3 @@ data class Weather(
     val temperature: Double,
     val humidity: Int,
 )
-
-data class UserLocationWeather(
-    val placeName: String,
-    val weathers: List<Weather>,
-)
-
-

@@ -6,7 +6,6 @@ import com.actiangent.cuacagempa.core.model.TemperatureOptions
 import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import java.io.IOException
 import javax.inject.Inject
 
@@ -19,8 +18,8 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
             UserData(
                 latitude = userPreferences.coordinate.latitude,
                 longitude = userPreferences.coordinate.longitude,
-                provinceEndpoint = userPreferences.provinceEndpoint,
-                districtId = userPreferences.districtId,
+                province = userPreferences.province,
+                areaId = userPreferences.areaId,
                 temperatureOption = when (userPreferences.temperatureOption) {
                     null,
                     TemperatureOptionsProto.UNRECOGNIZED,
@@ -32,7 +31,6 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
 
     suspend fun setLatitudeLongitude(latitude: Double, longitude: Double) {
         try {
-            Log.d("preferences", "setLatitudeLongitude: $latitude, $longitude")
             userPreferences.updateData {
                 it.copy {
                     this.coordinate = this.coordinate.copy {
@@ -46,11 +44,11 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setProvinceEndpoint(endpoint: String) {
+    suspend fun setProvince(province: String) {
         try {
             userPreferences.updateData {
                 it.copy {
-                    this.provinceEndpoint = endpoint
+                    this.province = province
                 }
             }
         } catch (ioException: IOException) {
@@ -58,13 +56,12 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setDistrictId(districtId: String) {
+    suspend fun setAreaId(areaId: String) {
         try {
-            Log.d("preferences", "setDistrictId: $districtId")
             userPreferences.updateData {
-                if (it.districtId != districtId) {
+                if (it.areaId != areaId) {
                     it.copy {
-                        this.districtId = districtId
+                        this.areaId = areaId
                     }
                 } else {
                     it

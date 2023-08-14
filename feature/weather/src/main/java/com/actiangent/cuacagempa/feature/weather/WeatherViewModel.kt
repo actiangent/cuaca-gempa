@@ -3,31 +3,33 @@ package com.actiangent.cuacagempa.feature.weather
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.actiangent.cuacagempa.core.common.result.Result
-import com.actiangent.cuacagempa.core.data.repository.LocationWeatherRepository
-import com.actiangent.cuacagempa.core.model.UserLocationWeather
+import com.actiangent.cuacagempa.core.data.repository.DistrictWeatherRepository
+import com.actiangent.cuacagempa.core.model.Weather
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val compositeLocationWeatherRepository: LocationWeatherRepository,
+    private val districtWeatherRepository: DistrictWeatherRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<WeatherUiState> =
-        compositeLocationWeatherRepository.observeWeathers().map { result ->
-            when (result) {
+    private val forceRefresh = MutableStateFlow(false)
+
+    val uiState: StateFlow<WeatherUiState> = districtWeatherRepository.observeDistrictWeather()
+        .map { weathersResult ->
+            when (weathersResult) {
                 Result.Loading -> {
                     WeatherUiState.Loading
                 }
                 is Result.Success -> {
-                    WeatherUiState.Success(result.data)
+                    WeatherUiState.Success(
+                        placeName = "Place Name",
+                        weathers = weathersResult.data
+                    )
                 }
                 is Result.Error -> {
-                    WeatherUiState.Error(result.message)
+                    WeatherUiState.Error(weathersResult.message)
                 }
             }
         }.stateIn(
@@ -37,7 +39,7 @@ class WeatherViewModel @Inject constructor(
         )
 
     fun refresh() {
-        compositeLocationWeatherRepository.forceUpdate()
+        forceRefresh.update { true }
     }
 
 }
@@ -45,7 +47,8 @@ class WeatherViewModel @Inject constructor(
 sealed interface WeatherUiState {
     object Loading : WeatherUiState
     data class Success(
-        val data: UserLocationWeather
+        val placeName: String,
+        val weathers: List<Weather>,
     ) : WeatherUiState
 
     data class Error(val message: String) : WeatherUiState
