@@ -11,6 +11,7 @@ import com.actiangent.cuacagempa.core.common.dispatcher.Dispatcher
 import com.actiangent.cuacagempa.core.common.dispatcher.WeatherQuakeDispatchers
 import com.actiangent.cuacagempa.core.data.repository.location.LocationRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
+import com.actiangent.cuacagempa.sync.work.SyncConstraints
 import com.actiangent.cuacagempa.sync.work.WorkDataKeys.WEATHER_SYNC_LATITUDE_KEY
 import com.actiangent.cuacagempa.sync.work.WorkDataKeys.WEATHER_SYNC_LONGITUDE_KEY
 import com.actiangent.cuacagempa.sync.work.WorkDataKeys.WEATHER_SYNC_PROVINCE_KEY
@@ -44,7 +45,9 @@ class LocationSyncWorker @AssistedInject constructor(
     }
 
     companion object {
+
         fun startUpRequestLocationWork() = OneTimeWorkRequestBuilder<LocationSyncWorker>()
+            .setConstraints(SyncConstraints)
             .build()
     }
 }

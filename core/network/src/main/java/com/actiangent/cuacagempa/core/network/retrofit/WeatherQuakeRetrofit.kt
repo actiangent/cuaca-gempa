@@ -16,6 +16,9 @@ private interface WeatherApi {
     @GET("MEWS/DigitalForecast/DigitalForecast-{cityName}.xml")
     suspend fun getProvinceWeather(@Path("cityName") province: String): NetworkWeatherData
 
+    @GET("MEWS/DigitalForecast/DigitalForecast-Indonesia.xml")
+    suspend fun getIndonesia(): NetworkWeatherData
+
 }
 
 private interface EarthQuakeApi

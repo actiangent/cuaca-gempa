@@ -78,6 +78,10 @@ class MainActivityViewModel @Inject constructor(
         _locationRequestError.update { "Please turn on location" }
     }
 
+    fun showLocationPermissionsRevokedError() {
+        _locationRequestError.update { "Location permissions revoked" }
+    }
+
     fun locationRequestErrorShown() {
         _locationRequestError.update { null }
     }

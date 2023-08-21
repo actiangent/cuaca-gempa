@@ -10,7 +10,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Snackbar
@@ -19,14 +18,15 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.actiangent.cuacagempa.core.designsystem.component.PermissionDialog
 import com.actiangent.cuacagempa.core.designsystem.theme.WeatherQuakeTheme
 import com.actiangent.cuacagempa.ui.WeatherQuakeApp
+import com.google.accompanist.permissions.MultiplePermissionsState
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -37,19 +37,6 @@ private const val COARSE_LOCATION_PERMISSION = Manifest.permission.ACCESS_COARSE
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
-
-    private val locationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        when (isGranted) {
-            true -> {
-                onLocationGranted()
-            }
-            false -> {
-                onLocationDenied()
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,17 +52,25 @@ class MainActivity : ComponentActivity() {
         Log.d("Current TimeZone", "onCreate: ${TimeZone.currentSystemDefault()}")
 
         setContent {
-            DisposableEffect(uiState) {
-                when (val state = uiState) {
-                    is MainActivityUiState.Success -> {
-                        if (state.isLocationCached) {
-                            safeRequestLocation()
-                        }
-                    }
-                    else -> Unit
+            val locationPermissionsState = rememberMultiplePermissionsState(
+                listOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            ) { permissions ->
+                if (permissions.values.any { granted -> granted }) {
+                    onLocationGranted()
+                } else {
+                    onLocationDenied()
                 }
-                onDispose {}
             }
+
+            WeatherQuakeLocationPermissionHandling(
+                appState = uiState,
+                permissionsState = locationPermissionsState,
+                onLocationGranted = { onLocationGranted() },
+                onLocationRevoked = { viewModel.showLocationPermissionsRevokedError() }
+            )
 
             WeatherQuakeTheme {
                 Box {
@@ -86,7 +81,7 @@ class MainActivity : ComponentActivity() {
                         PermissionDialog(
                             onConfirm = {
                                 viewModel.permissionDialogShown()
-                                safeRequestLocation()
+                                locationPermissionsState.launchMultiplePermissionRequest()
                             },
                             onDismiss = { viewModel.permissionDialogShown() },
                             title = "Please grant location permission",
@@ -113,10 +108,11 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.align(Alignment.BottomStart),
                         hostState = snackbarState
                     ) { snackbarData ->
+                        Log.d("SnackbarHost", snackbarData.message)
                         Snackbar(snackbarData = snackbarData)
                     }
 
-                    WeatherQuakeApp(requestLocation = { safeRequestLocation() })
+                    WeatherQuakeApp()
                 }
             }
         }
@@ -133,17 +129,66 @@ class MainActivity : ComponentActivity() {
     private fun isLocationPermissionPermanentlyDeclined() =
         !shouldShowRequestPermissionRationale(COARSE_LOCATION_PERMISSION)
 
-    private fun safeRequestLocation() {
-        when {
-            (hasPermission(COARSE_LOCATION_PERMISSION)) -> {
-                onLocationGranted()
-            }
-            (!hasPermission(COARSE_LOCATION_PERMISSION)) -> {
-                locationPermissionLauncher.launch(COARSE_LOCATION_PERMISSION)
+}
+
+@Composable
+private fun WeatherQuakeLocationPermissionHandling(
+    appState: MainActivityUiState,
+    permissionsState: MultiplePermissionsState,
+    onLocationGranted: () -> Unit,
+    onLocationRevoked: () -> Unit
+) {
+    val lifecycleOwner by rememberUpdatedState(LocalLifecycleOwner.current)
+    DisposableEffect(lifecycleOwner, appState) {
+        val lifecycle = lifecycleOwner.lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    when (appState) {
+                        is MainActivityUiState.Success -> {
+                            val allPermissionsRevoked = permissionsState.permissions.size ==
+                                    permissionsState.revokedPermissions.size
+
+                            if (appState.isLocationCached) {
+                                if (!allPermissionsRevoked) {
+                                    onLocationGranted()
+                                } else {
+                                    onLocationRevoked()
+                                }
+                            } else {
+                                permissionsState.launchMultiplePermissionRequest()
+                            }
+                        }
+                        else -> Unit
+                    }
+                }
+                else -> Unit
             }
         }
-    }
 
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) -> Unit) {
+    val eventHandler = rememberUpdatedState(onEvent)
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { owner, event ->
+            eventHandler.value(owner, event)
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 }
 
 fun Activity.hasPermission(permission: String): Boolean =

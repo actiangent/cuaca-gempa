@@ -32,7 +32,6 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun WeatherScreen(
-    requestLocation: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: WeatherViewModel = hiltViewModel(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()

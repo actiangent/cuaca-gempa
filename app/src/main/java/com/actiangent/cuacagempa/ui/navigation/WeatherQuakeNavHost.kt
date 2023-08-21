@@ -10,7 +10,6 @@ import com.actiangent.cuacagempa.feature.weather.WeatherScreen
 
 @Composable
 fun WeatherQuakeNavHost(
-    requestLocation: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -20,7 +19,7 @@ fun WeatherQuakeNavHost(
         modifier = modifier,
     ) {
         composable("Cuaca") {
-            WeatherScreen(requestLocation = requestLocation)
+            WeatherScreen()
         }
         composable("Gempa") {
             // EarthquakeScreen()

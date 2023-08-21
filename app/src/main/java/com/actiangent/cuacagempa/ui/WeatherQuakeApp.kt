@@ -21,7 +21,6 @@ enum class WeatherQuakeDestination(
 
 @Composable
 fun WeatherQuakeApp(
-    requestLocation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -57,7 +56,6 @@ fun WeatherQuakeApp(
     ) { paddingValues ->
         Column(modifier = modifier.padding(paddingValues)) {
             WeatherQuakeNavHost(
-                requestLocation = requestLocation,
                 navController = navController
             )
         }
@@ -67,5 +65,5 @@ fun WeatherQuakeApp(
 @Preview
 @Composable
 fun WeatherQuakeAppPreview() {
-    WeatherQuakeApp(requestLocation = {})
+    WeatherQuakeApp()
 }

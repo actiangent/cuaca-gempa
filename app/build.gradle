@@ -79,6 +79,7 @@ dependencies {
 
     // Accompanist
     implementation libs.accompanist.systemuicontroller
+    implementation libs.accompanist.permissions
 
     implementation libs.hilt.android
     kapt libs.hilt.compiler
