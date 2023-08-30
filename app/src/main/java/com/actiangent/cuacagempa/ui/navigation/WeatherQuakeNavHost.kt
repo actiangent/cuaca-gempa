@@ -15,13 +15,13 @@ fun WeatherQuakeNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "Cuaca",
+        startDestination = TopLevelDestination.WEATHER.route,
         modifier = modifier,
     ) {
-        composable("Cuaca") {
+        composable(TopLevelDestination.WEATHER.route) {
             WeatherScreen()
         }
-        composable("Gempa") {
+        composable(TopLevelDestination.EARTHQUAKE.route) {
             // EarthquakeScreen()
         }
     }
