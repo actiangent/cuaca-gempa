@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?android:colorControlNormal"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M460 800q-33 0-60.5-16.5t-43.5-43.5q-11-20-2-40t34-20q10 0 20 6t21 20q5 7 13.5 10.5t17.5 3.5q17 0 28.5-11.5t11.5-28.5t-11.5-28.5t-28.5-11.5h-340q-17 0-28.5-11.5t-11.5-28.5t11.5-28.5t28.5-11.5h340q50 0 85 35t35 85t-35 85t-85 35zm-340-400q-17 0-28.5-11.5t-11.5-28.5t11.5-28.5t28.5-11.5h500q26 0 43-17t17-43t-17-43t-43-17q-17 0-30.5 7.5t-21.5 21.5q-8 15-19 23t-22 8q-21 0-33-15t-6-32q14-42 49.5-67.5t82.5-25.5q59 0 99.5 40.5t40.5 99.5t-40.5 99.5t-99.5 40.5h-500zm678 308q-21 9-39.5-1.5t-18.5-34.5q0-11 8-21.5t23-18.5q14-8 21.5-21.5t7.5-30.5q0-26-17-43t-43-17h-620q-17 0-28.5-11.5t-11.5-28.5t11.5-28.5t28.5-11.5h620q59 0 99.5 40.5t40.5 99.5q0 43-22.5 77t-59.5 51z" />
+</vector>
