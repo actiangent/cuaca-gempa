@@ -5,7 +5,9 @@ import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +20,7 @@ import com.actiangent.cuacagempa.core.designsystem.icon.Icon.ImageVectorIcon
 object WeatherQuakeIcons {
 
     val ArrowBack = ImageVectorIcon(Icons.Rounded.ArrowBack)
+    val SettingsFilled = ImageVectorIcon(Icons.Filled.Settings)
     val Cloud = DrawableResourceIcon(R.drawable.ic_cloud_24)
     val ClearNight = DrawableResourceIcon(R.drawable.ic_clear_night_24)
     val Sunny = DrawableResourceIcon(R.drawable.ic_sunny_24)
