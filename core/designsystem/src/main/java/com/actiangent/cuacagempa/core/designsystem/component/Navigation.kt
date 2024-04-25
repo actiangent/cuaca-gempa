@@ -46,6 +46,7 @@ fun RowScope.WeatherQuakeNavigationBarItem(
 }
 
 private object NavigationBarNoRippleTheme : RippleTheme {
+
     @Composable
     override fun defaultColor() = Color.Unspecified
 

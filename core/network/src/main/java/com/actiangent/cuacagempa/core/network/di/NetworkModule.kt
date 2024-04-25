@@ -14,7 +14,6 @@ import kotlinx.datetime.Instant
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -53,7 +52,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideWeatherDataSource(retrofit: Retrofit): RemoteWeatherDataSource =
-        WeatherRetrofit(retrofit)
+    fun provideRemoteWeatherDataSource(
+        retrofit: Retrofit
+    ): RemoteWeatherDataSource = WeatherRetrofit(retrofit)
 
 }

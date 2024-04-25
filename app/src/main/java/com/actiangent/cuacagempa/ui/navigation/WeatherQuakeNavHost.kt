@@ -6,7 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.actiangent.cuacagempa.feature.weather.WeatherScreen
+import com.actiangent.cuacagempa.feature.weather.navigation.WEATHER_GRAPH
+import com.actiangent.cuacagempa.feature.weather.navigation.weatherGraph
 
 @Composable
 fun WeatherQuakeNavHost(
@@ -15,13 +16,11 @@ fun WeatherQuakeNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = TopLevelDestination.WEATHER.route,
+        startDestination = WEATHER_GRAPH,
         modifier = modifier,
     ) {
-        composable(TopLevelDestination.WEATHER.route) {
-            WeatherScreen()
-        }
-        composable(TopLevelDestination.EARTHQUAKE.route) {
+        weatherGraph(navController)
+        composable("earthquake_route") {
             // EarthquakeScreen()
         }
     }

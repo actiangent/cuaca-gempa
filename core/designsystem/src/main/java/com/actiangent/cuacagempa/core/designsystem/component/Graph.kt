@@ -1,4 +1,4 @@
-package com.actiangent.cuacagempa.core.designsystem.component.graph
+package com.actiangent.cuacagempa.core.designsystem.component
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -15,7 +15,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.DrawStyle
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import com.actiangent.cuacagempa.core.designsystem.model.GraphEntry
 
 // Cubic bezier line graph
 @OptIn(ExperimentalTextApi::class)
@@ -101,7 +101,7 @@ fun LineGraph(
                         textLayoutResult = textLayoutResult,
                         topLeft = offset.copy(
                             x = offset.x - (textLayoutResult.size.width / 2),
-                            y = offset.y - (size.height * 0.15f)
+                            y = offset.y - (size.height * 0.2f)
                         )
                     )
                 }
@@ -111,6 +111,8 @@ fun LineGraph(
                 lineTo(0f, size.height)
                 lineTo(0f, offsets.first().y)
                 lineTo(offsets.first().x, offsets.first().y)
+
+                close()
             }
 
             drawPath(
@@ -132,13 +134,6 @@ fun LineGraph(
                 } else {
                     point(offset.x, offset.y)
                 }
-
-                drawLine(
-                    color = Color.Black.copy(alpha = 0.7f),
-                    start = offset.copy(y = size.height),
-                    end = offset,
-                    pathEffect = PathEffect.dashPathEffect(intervals = floatArrayOf(10f, 20f)),
-                )
             }
         }
     }

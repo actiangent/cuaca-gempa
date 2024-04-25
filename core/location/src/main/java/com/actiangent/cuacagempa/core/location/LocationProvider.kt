@@ -8,8 +8,8 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
 import androidx.annotation.WorkerThread
-import com.google.android.gms.location.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.Executor
 
 @Suppress("deprecation")
@@ -53,5 +53,4 @@ class LocationProvider(context: Context) {
     }
 
     fun isGpsEnabled() = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-
 }

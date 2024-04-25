@@ -15,13 +15,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.actiangent.cuacagempa.core.designsystem.component.PermissionDialog
 import com.actiangent.cuacagempa.core.designsystem.theme.WeatherQuakeTheme
 import com.actiangent.cuacagempa.ui.WeatherQuakeApp
@@ -154,14 +164,17 @@ private fun WeatherQuakeLocationPermissionHandling(
                                     onLocationGranted()
                                 } else {
                                     onLocationRevoked()
+                                    permissionsState.launchMultiplePermissionRequest()
                                 }
                             } else {
                                 permissionsState.launchMultiplePermissionRequest()
                             }
                         }
+
                         else -> Unit
                     }
                 }
+
                 else -> Unit
             }
         }

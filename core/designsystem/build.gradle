@@ -38,6 +38,10 @@ android {
 
 dependencies {
 
+    implementation(project(":core:model"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+
     implementation libs.androidx.core.ktx
     implementation libs.kotlinx.coroutines.android
     implementation libs.androidx.lifecycle.runtimeCompose

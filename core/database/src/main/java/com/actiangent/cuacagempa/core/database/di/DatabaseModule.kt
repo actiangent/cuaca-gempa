@@ -22,6 +22,18 @@ object DatabaseModule {
         context,
         WeatherQuakeDatabase::class.java,
         "weather-quake-database",
-    ).build()
+    )
+        /*
+        .addCallback(object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+
+                db.execSQL("INSERT INTO province_table (name, identifier, endpoint, record_id) VALUES ('Jakarta', 'jakarta', 'DKIJakarta', 7);")
+                db.execSQL("INSERT INTO district_table (district_id, type, identifier, province_record_id) VALUES ('501195', 'land', 'central_jakarta', 7);")
+            }
+        })
+         */
+        .createFromAsset("database/weatherquake.db")
+        .build()
 
 }

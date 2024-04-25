@@ -24,8 +24,6 @@ android {
         }
     }
     compileOptions {
-        coreLibraryDesugaringEnabled true
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -44,6 +42,7 @@ dependencies {
     implementation project(":core:data")
     implementation project(":core:model")
     implementation project(":core:database")
+    implementation project(":core:location")
 
     implementation "androidx.work:work-runtime-ktx:2.8.1"
     implementation "androidx.hilt:hilt-work:1.0.0"

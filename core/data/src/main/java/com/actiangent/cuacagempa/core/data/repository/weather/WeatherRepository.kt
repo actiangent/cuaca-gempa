@@ -1,21 +1,21 @@
 package com.actiangent.cuacagempa.core.data.repository.weather
 
-import com.actiangent.cuacagempa.core.model.Weather
+import com.actiangent.cuacagempa.core.common.result.Result
+import com.actiangent.cuacagempa.core.data.WeatherSyncable
+import com.actiangent.cuacagempa.core.model.Forecast
+import com.actiangent.cuacagempa.core.model.RegencyForecasts
+import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import kotlinx.coroutines.flow.Flow
 
-interface WeatherRepository {
+interface WeatherRepository : WeatherSyncable {
 
-    suspend fun getCurrentWeather(
-        districtIds: Set<String>,
-        temperaturePreference: String,
-    ): Flow<List<Weather>>
+    fun getLocalRegencyWeatherForecast(
+        regencyId: String,
+        temperatureUnit: TemperatureUnit
+    ): Flow<Result<RegencyForecasts>>
 
-    suspend fun fetchUserCurrentWeather(
-        latitude: Double,
-        longitude: Double,
-        province: String,
-        saveCurrentAreaId: suspend (String) -> Unit
-    )
-
-    suspend fun fetchIndonesiaCurrentWeather()
+    fun getRemoteWeatherForecast(
+        regencyId: String,
+        temperatureUnit: TemperatureUnit
+    ): Flow<List<Forecast>>
 }

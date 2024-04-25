@@ -24,7 +24,7 @@ fun Location.asString(format: Int = Location.FORMAT_DEGREES): String {
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun Geocoder.getAddress(location: Location): Address? =
     suspendCancellableCoroutine { continuation ->
-        // API Tiramisu = 33
+        // Tiramisu = API 33
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getFromLocation(
                 location.latitude,

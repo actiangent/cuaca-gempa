@@ -1,17 +1,23 @@
 syntax = "proto3";
 
-import "com/actiangent/cuacagempa/data/latlon.proto";
-import "com/actiangent/cuacagempa/data/temperature_options.proto";
+import "com/actiangent/cuacagempa/data/temperature_units.proto";
 
 option java_package = "com.actiangent.cuacagempa.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
+  // reserved 2, 8 to 10;
+  reserved 2, 4, 5 to 10;
 
-  LatLonProto coordinate = 1;
-  string province = 2;
-  string area_id = 3;
+  map<string, bool> user_regency_ids = 1;
 
-  TemperatureOptionsProto temperature_option = 4;
+  TemperatureUnitsProto temperature_unit = 3;
+  // wind_direction_unit = 4;
+  // wind_speed_unit = 5;
+
+  // dark_theme_config = 6;
+  // material_you = 7;
+
+  bool has_done_onboarding = 11;
 
 }

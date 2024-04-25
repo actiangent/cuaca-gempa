@@ -2,6 +2,7 @@ package com.actiangent.cuacagempa.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -63,8 +64,27 @@ fun WeatherQuakeTheme(
         LightColorScheme
     }
 
+    val typography = Typography(
+        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = poppins),
+        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = poppins),
+        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = poppins),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = poppins),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = poppins),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = poppins),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = poppins),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = poppins),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = poppins),
+        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = poppins),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = poppins),
+        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = poppins),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = poppins),
+        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = poppins),
+        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = poppins),
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = typography,
         content = content
     )
 }

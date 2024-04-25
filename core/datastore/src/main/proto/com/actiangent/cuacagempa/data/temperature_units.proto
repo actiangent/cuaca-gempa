@@ -3,7 +3,7 @@ syntax = "proto3";
 option java_package = "com.actiangent.cuacagempa.core.datastore";
 option java_multiple_files = true;
 
-enum TemperatureOptionsProto {
+enum TemperatureUnitsProto {
   TEMPERATURE_CELSIUS = 0;
   TEMPERATURE_FAHRENHEIT = 1;
 }

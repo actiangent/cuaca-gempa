@@ -1,9 +1,11 @@
 package com.actiangent.cuacagempa.core.network
 
-import com.actiangent.cuacagempa.core.network.model.NetworkWeatherData
+import com.actiangent.cuacagempa.core.network.model.NetworkRegencyWeather
 
 interface RemoteWeatherDataSource {
 
-    suspend fun getProvinceWeather(province: String): NetworkWeatherData
-
+    suspend fun getRegencyWeathers(
+        provinceEndpoint: String,
+        regencyId: String
+    ): NetworkRegencyWeather
 }

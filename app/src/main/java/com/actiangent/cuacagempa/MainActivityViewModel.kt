@@ -6,7 +6,13 @@ import com.actiangent.cuacagempa.core.data.repository.location.LocationRepositor
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.sync.work.manager.WorkManagerSyncManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +39,7 @@ class MainActivityViewModel @Inject constructor(
 
     val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
         MainActivityUiState.Success(
-            isLocationCached = it.isLocationCached
+            isLocationCached = false
         )
     }.stateIn(
         scope = viewModelScope,
@@ -61,7 +67,7 @@ class MainActivityViewModel @Inject constructor(
             if (!locationRepository.isGpsEnabled()) {
                 showLocationRequestError()
             } else {
-                syncManager.startLocationAndWeatherSyncWork()
+                syncManager.startWeatherSyncWork()
             }
         }
     }

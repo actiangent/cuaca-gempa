@@ -23,6 +23,3 @@ enum class TopLevelDestination(
         titleTextId = R.string.earthquake,
     )
 }
-
-val TopLevelDestination.route
-    get() = this.name.lowercase()

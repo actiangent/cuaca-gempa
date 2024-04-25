@@ -1,4 +1,4 @@
-package com.actiangent.cuacagempa.core.designsystem.component.graph
+package com.actiangent.cuacagempa.core.designsystem.model
 
 data class GraphEntry(
     val value: Number,

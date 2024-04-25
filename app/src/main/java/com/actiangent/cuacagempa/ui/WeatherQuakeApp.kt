@@ -22,15 +22,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBar
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBarItem
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
 import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
+import com.actiangent.cuacagempa.feature.weather.navigation.navigateToWeatherGraph
 import com.actiangent.cuacagempa.ui.navigation.TopLevelDestination
 import com.actiangent.cuacagempa.ui.navigation.WeatherQuakeNavHost
-import com.actiangent.cuacagempa.ui.navigation.route
 
 @Composable
 fun WeatherQuakeApp(
@@ -41,8 +43,8 @@ fun WeatherQuakeApp(
     val currentTopLevelDestination: TopLevelDestination? by remember {
         derivedStateOf {
             when (currentBackStackEntry?.destination?.route) {
-                TopLevelDestination.WEATHER.route -> TopLevelDestination.WEATHER
-                TopLevelDestination.EARTHQUAKE.route -> TopLevelDestination.EARTHQUAKE
+                "weather_graph" -> TopLevelDestination.WEATHER
+                "earthquake_route" -> TopLevelDestination.EARTHQUAKE
                 else -> null
             }
         }
@@ -53,7 +55,27 @@ fun WeatherQuakeApp(
             WeatherQuakeBottomBar(
                 destinations = TopLevelDestination.values().asList(),
                 onNavigateToDestination = { destination ->
-                    navController.navigate(destination.route)
+                    val topLevelNavOptions = navOptions {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
+
+                    when (destination) {
+                        TopLevelDestination.WEATHER -> navController.navigateToWeatherGraph(
+                            topLevelNavOptions
+                        )
+
+                        TopLevelDestination.EARTHQUAKE -> navController.navigate("earthquake_route")
+                    }
                 },
                 currentDestination = currentBackStackEntry?.destination,
             )

@@ -23,6 +23,8 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -48,17 +50,21 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
 
     implementation(project(":core:database"))
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtimeCompose
 
+    implementation libs.androidx.compose.ui.util
+
     implementation libs.androidx.activity.compose
     implementation libs.androidx.compose.ui
     implementation libs.androidx.compose.ui.tooling.preview
     implementation libs.androidx.compose.foundation
     implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.material3
 
     implementation libs.hilt.android
     kapt libs.hilt.compiler
@@ -66,6 +72,9 @@ dependencies {
     implementation libs.androidx.hilt.navigation.compose
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+
     // implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.4'
 
     testImplementation libs.junit4
