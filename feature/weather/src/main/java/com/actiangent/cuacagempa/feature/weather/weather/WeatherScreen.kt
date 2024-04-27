@@ -1,13 +1,11 @@
 package com.actiangent.cuacagempa.feature.weather.weather
 
 import android.util.LayoutDirection
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -35,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -51,7 +51,6 @@ import com.actiangent.cuacagempa.core.model.Weathers
 import com.actiangent.cuacagempa.core.model.asWeatherCondition
 import com.actiangent.cuacagempa.core.model.asWeathers
 import com.actiangent.cuacagempa.core.model.temperature
-import com.actiangent.cuacagempa.feature.weather.WeatherUiState
 import com.actiangent.cuacagempa.feature.weather.brush
 import kotlin.math.absoluteValue
 
@@ -123,46 +122,6 @@ fun WeatherScreen(
             }
         }
     }
-
-//    Column(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .padding(8.dp)
-//            .verticalScroll(rememberScrollState())
-//    ) {
-//        when (uiState) {
-//            is WeatherUiState.Loading -> {
-//                // TODO - display loading state
-//            }
-//
-//            is WeatherUiState.Success -> {
-//                WeatherCard(
-//                    navigateToSearchDistrict = navigateToSearchDistrict,
-//                    weathers = uiState.data.forecasts.flatMap { it.weathers }.asWeathers(),
-//                    selectedWeatherFilterIndex = selectedWeatherFilterIndex,
-//                    onSelectedWeatherFilterIndex = { index -> selectedWeatherFilterIndex = index },
-//                    modifier = modifier
-//                        .fillMaxWidth()
-//                        .wrapContentHeight()
-//                )
-//                Spacer(
-//                    modifier = modifier.padding(8.dp)
-//                )
-//                Box(
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Text(
-//                        text = "Credits: BMKG",
-//                        style = MaterialTheme.typography.bodySmall
-//                    )
-//                }
-//            }
-//
-//            is WeatherUiState.Error -> {
-//                Log.d("Weather error", "WeatherScreen: ${uiState.message}")
-//            }
-//        }
-//    }
 }
 
 @Composable
@@ -217,7 +176,7 @@ fun WeatherCard(
                 modifier = modifier
                     .padding(vertical = 24.dp)
             )
-            WeatherFilterTab(
+            ForecastFilterTab(
                 titles = listOf("6 Hour", "3 Days"),
                 selectedIndex = selectedWeatherFilterIndex,
                 onClick = onSelectedWeatherFilterIndex
@@ -263,16 +222,16 @@ fun WeatherInfo(
         )
         Spacer(
             modifier = modifier
-                .padding(8.dp)
+                .height(8.dp)
         )
         WeatherInfoTemperature(
-            temperature = temperature,
+            currentTemperature = temperature,
             minTemperature = minTemperature,
             maxTemperature = maxTemperature
         )
         Spacer(
             modifier = modifier
-                .padding(8.dp)
+                .height(8.dp)
         )
         Text(
             text = condition.toString(),
@@ -281,7 +240,7 @@ fun WeatherInfo(
         )
         Spacer(
             modifier = modifier
-                .padding(8.dp)
+                .height(8.dp)
         )
         WeatherInfoHumidityAndWind(
             humidity = humidity,
@@ -292,8 +251,8 @@ fun WeatherInfo(
 }
 
 @Composable
-fun ColumnScope.WeatherInfoTemperature(
-    temperature: Double,
+fun WeatherInfoTemperature(
+    currentTemperature: Double,
     minTemperature: Double,
     maxTemperature: Double,
     modifier: Modifier = Modifier
@@ -301,21 +260,19 @@ fun ColumnScope.WeatherInfoTemperature(
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .align(Alignment.CenterHorizontally)
     ) {
         TextIcon(
             text = {
                 Text(
                     text = minTemperature.temperature(),
                     fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             },
             leadingIcon = {
                 Icon(
                     icon = WeatherQuakeIcons.ArrowDropDown,
-                    contentDescription = ""
+                    contentDescription = null
                 )
             }
         )
@@ -324,10 +281,10 @@ fun ColumnScope.WeatherInfoTemperature(
                 .padding(12.dp)
         )
         Text(
-            text = temperature.temperature(),
+            text = currentTemperature.temperature(),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialTheme.typography.displayMedium,
         )
         Spacer(
             modifier = modifier
@@ -344,7 +301,7 @@ fun ColumnScope.WeatherInfoTemperature(
             leadingIcon = {
                 Icon(
                     icon = WeatherQuakeIcons.ArrowDropUp,
-                    contentDescription = ""
+                    contentDescription = null
                 )
             },
         )
@@ -352,7 +309,7 @@ fun ColumnScope.WeatherInfoTemperature(
 }
 
 @Composable
-fun ColumnScope.WeatherInfoHumidityAndWind(
+fun WeatherInfoHumidityAndWind(
     humidity: Int,
     windDirection: String,
     windSpeed: String,
@@ -361,8 +318,6 @@ fun ColumnScope.WeatherInfoHumidityAndWind(
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .align(Alignment.CenterHorizontally)
     ) {
         TextIcon(
             text = {
@@ -374,13 +329,13 @@ fun ColumnScope.WeatherInfoHumidityAndWind(
             leadingIcon = {
                 Icon(
                     icon = WeatherQuakeIcons.HumidityPercentage,
-                    contentDescription = ""
+                    contentDescription = null
                 )
             },
         )
         Spacer(
             modifier = modifier
-                .padding(16.dp)
+                .width(16.dp)
         )
         TextIcon(
             text = {
@@ -392,7 +347,7 @@ fun ColumnScope.WeatherInfoHumidityAndWind(
             leadingIcon = {
                 Icon(
                     icon = WeatherQuakeIcons.Air,
-                    contentDescription = ""
+                    contentDescription = null
                 )
             }
         )
@@ -400,7 +355,7 @@ fun ColumnScope.WeatherInfoHumidityAndWind(
 }
 
 @Composable
-fun WeatherFilterTab(
+fun ForecastFilterTab(
     titles: List<String>,
     selectedIndex: Int,
     onClick: (Int) -> Unit,
@@ -430,9 +385,12 @@ fun WeatherFilterTab(
     }
 }
 
+enum class ForecastFilter {
+    SIXHOURS, DAILY
+}
 
-private val WeatherTabRowHeight = 40.dp
-private val WeatherTabHeight = 32.dp
+private val WeatherTabRowHeight = 48.dp
+private val WeatherTabHeight = 40.dp
 
 
 /*

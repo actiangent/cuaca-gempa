@@ -42,15 +42,6 @@ import com.actiangent.cuacagempa.core.model.WeatherCondition.UNKNOWN
 import kotlinx.datetime.LocalDate
 import kotlin.math.absoluteValue
 
-sealed interface WeatherUiState {
-    object Loading : WeatherUiState
-    data class Success(
-        val data: RegencyForecasts,
-    ) : WeatherUiState
-
-    data class Error(val message: String) : WeatherUiState
-}
-
 fun LocalDate.display(): String = "${dayOfMonth}/$monthNumber/$year"
 
 internal fun WeatherCondition.brush(

@@ -2,6 +2,8 @@ package com.actiangent.cuacagempa.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.actiangent.cuacagempa.core.database.WeatherQuakeDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,17 +25,23 @@ object DatabaseModule {
         WeatherQuakeDatabase::class.java,
         "weather-quake-database",
     )
-        /*
+        .createFromAsset("database/weatherquake.db")
         .addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 
-                db.execSQL("INSERT INTO province_table (name, identifier, endpoint, record_id) VALUES ('Jakarta', 'jakarta', 'DKIJakarta', 7);")
-                db.execSQL("INSERT INTO district_table (district_id, type, identifier, province_record_id) VALUES ('501195', 'land', 'central_jakarta', 7);")
+                db.execSQL(
+                    """
+                    CREATE TRIGGER IF NOT EXISTS avoid_duplicate_timestamp_before_insert_regency_weather 
+                       BEFORE INSERT ON regency_weather 
+                       WHEN (SELECT COUNT(timestamp) from regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id) > 0
+                    BEGIN
+                    	DELETE FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id;
+                    END
+                    """.trimIndent()
+                )
             }
         })
-         */
-        .createFromAsset("database/weatherquake.db")
         .build()
 
 }

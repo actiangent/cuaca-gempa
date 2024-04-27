@@ -11,7 +11,6 @@ import com.actiangent.cuacagempa.core.data.repository.UserDistrictWeatherReposit
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.core.model.Regency
 import com.actiangent.cuacagempa.core.model.RegencyForecasts
-import com.actiangent.cuacagempa.feature.weather.WeatherUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -95,6 +94,12 @@ class WeatherViewModel @Inject constructor(
     }
 }
 
-enum class WeathersFilter {
-    SIXHOURS, DAILY
+sealed interface WeatherUiState {
+    object Loading : WeatherUiState
+    data class Success(
+        val data: RegencyForecasts,
+    ) : WeatherUiState
+
+    data class Error(val message: String) : WeatherUiState
 }
+
