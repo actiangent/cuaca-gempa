@@ -16,7 +16,7 @@ import kotlinx.datetime.Instant
             childColumns = ["regency_id"],
         )
     ],
-//    indices = [Index(value = ["timestamp"], unique = true)]
+    indices = [Index(value = ["timestamp"])]
 )
 data class RegencyWeatherEntity(
 

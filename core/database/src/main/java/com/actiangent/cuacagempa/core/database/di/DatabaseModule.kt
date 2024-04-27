@@ -34,9 +34,9 @@ object DatabaseModule {
                     """
                     CREATE TRIGGER IF NOT EXISTS avoid_duplicate_timestamp_before_insert_regency_weather 
                        BEFORE INSERT ON regency_weather 
-                       WHEN (SELECT COUNT(timestamp) from regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id) > 0
+                       WHEN EXISTS(SELECT 1 FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id)
                     BEGIN
-                    	DELETE FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id;
+                        DELETE FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id;
                     END
                     """.trimIndent()
                 )
