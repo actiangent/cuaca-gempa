@@ -2,6 +2,7 @@ package com.actiangent.cuacagempa.core.common.datetime
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -15,6 +16,8 @@ object DateTimeUtil {
 }
 
 fun now() = Clock.System.now()
+
+fun LocalDate.text(): String = "${dayOfMonth}/$monthNumber/$year"
 
 fun nowAsJakartaDateTime() = now().toJakartaDateTime()
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun RoundedTabRow(
@@ -69,9 +70,9 @@ fun RoundedTabRow(
 
         val tabCount = tabPlaceables.size
 
-        val space = constraints.maxHeight / 4
-        val indicatorWidth = tabPlaceables.maxOf { it.width }
-        val layoutWidth = indicatorWidth * tabCount
+        val indicatorWidth = tabPlaceables.sumOf { it.width } / tabCount
+        val space = 4.dp.roundToPx()
+        val layoutWidth = (indicatorWidth * tabCount) + space
 
         val indicatorPlaceable = indicatorMeasurables.measure(
             constraints.copy(
@@ -81,10 +82,10 @@ fun RoundedTabRow(
 
         layout(layoutWidth + (space * 2), constraints.maxHeight) {
             val indicatorX = (indicatorIndex.value * indicatorWidth).toInt() +
-                    ((space / 2) * (selectedIndex + 1))
+                    (space * (selectedIndex + 1))
             indicatorPlaceable.place(indicatorX, 0)
 
-            var x = 0 + (space / 2)
+            var x = space
             tabPlaceables.forEach { placeable ->
                 placeable.placeRelative(x, 0)
                 x += (placeable.width) + (space / 2)

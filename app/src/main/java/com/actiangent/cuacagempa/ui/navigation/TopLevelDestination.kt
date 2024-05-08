@@ -7,19 +7,16 @@ import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
 enum class TopLevelDestination(
     val selectedIcon: Icon,
     val unselectedIcon: Icon,
-    val iconTextId: Int,
-    val titleTextId: Int,
+    val textId: Int,
 ) {
     WEATHER(
         selectedIcon = WeatherQuakeIcons.Cloud,
         unselectedIcon = WeatherQuakeIcons.Cloud,
-        iconTextId = R.string.weather,
-        titleTextId = R.string.weather,
+        textId = R.string.weather,
     ),
     EARTHQUAKE(
         selectedIcon = WeatherQuakeIcons.Earthquake,
         unselectedIcon = WeatherQuakeIcons.Earthquake,
-        iconTextId = R.string.earthquake,
-        titleTextId = R.string.earthquake,
+        textId = R.string.earthquake,
     )
 }

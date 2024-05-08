@@ -10,6 +10,8 @@ interface UserDataRepository {
 
     suspend fun setUserRegencyIds(regencyIds: Set<String>)
 
+    suspend fun setSavedUserRegencyIds(regencyIds: Set<String>)
+
     suspend fun setUserRegencyIdSaved(regencyId: String, saved: Boolean)
 
     suspend fun setTemperatureUnit(unit: TemperatureUnit)

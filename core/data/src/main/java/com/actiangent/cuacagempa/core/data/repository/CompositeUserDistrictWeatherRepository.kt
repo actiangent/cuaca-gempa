@@ -3,7 +3,7 @@ package com.actiangent.cuacagempa.core.data.repository
 import com.actiangent.cuacagempa.core.common.result.Result
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.WeatherRepository
-import com.actiangent.cuacagempa.core.model.RegencyForecasts
+import com.actiangent.cuacagempa.core.model.Forecast
 import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,7 +19,7 @@ class CompositeUserDistrictWeatherRepository @Inject constructor(
 
     override fun observeUserRegencyWeatherForecast(
         regencyId: String
-    ): Flow<Result<RegencyForecasts>> =
+    ): Flow<Result<List<Forecast>>> =
         weatherRepository.getLocalRegencyWeatherForecast(
             regencyId,
             TemperatureUnit.CELSIUS

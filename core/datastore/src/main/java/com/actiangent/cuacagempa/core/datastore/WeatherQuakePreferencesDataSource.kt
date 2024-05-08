@@ -45,6 +45,19 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
         }
     }
 
+    suspend fun setSavedUserRegencyIds(regencyIds: Set<String>) {
+        try {
+            userPreferences.updateData {
+                it.copy {
+                    userRegencyIds.clear()
+                    userRegencyIds.putAll(regencyIds.associateWith { true })
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("WeatherQuakePreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
     suspend fun setUserRegencyIdSaved(regencyId: String, saved: Boolean) {
         try {
             userPreferences.updateData {

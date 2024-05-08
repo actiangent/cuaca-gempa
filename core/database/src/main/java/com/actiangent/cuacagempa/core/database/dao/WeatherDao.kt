@@ -2,7 +2,6 @@ package com.actiangent.cuacagempa.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.actiangent.cuacagempa.core.database.model.RegencyWeatherEntity
 import com.actiangent.cuacagempa.core.model.Weather
@@ -28,8 +27,6 @@ interface WeatherDao {
         WHERE
             regency_id = :regencyId AND DATE(timestamp) >= DATE('now') 
         ORDER BY timestamp
-        LIMIT
-            3
         """
     )
     // DATE('now') returns the current UTC date.
@@ -38,7 +35,7 @@ interface WeatherDao {
         temperatureUnit: String
     ): Flow<List<Weather>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertRegencyWeathers(weathers: List<RegencyWeatherEntity>)
 
     @Query("DELETE FROM regency_weather WHERE DATE(timestamp) < DATE('now')")

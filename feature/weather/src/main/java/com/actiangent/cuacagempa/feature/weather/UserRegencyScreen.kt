@@ -13,14 +13,15 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.IconButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -39,42 +40,70 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.actiangent.cuacagempa.core.designsystem.component.multiSelectionItems
 import com.actiangent.cuacagempa.core.designsystem.component.rememberMultiSelectionState
-import com.actiangent.cuacagempa.core.designsystem.icon.Icon
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
 import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
 
+@Composable
+fun UserRegencyRoute(
+    onBackClick: () -> Unit,
+    onRegencyClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: UserRegencyViewModel = hiltViewModel(),
+) {
+    val query by viewModel.searchQuery.collectAsStateWithLifecycle()
+
+    val userRegenciesUiState by viewModel.userRegenciesUiState.collectAsStateWithLifecycle()
+    val searchRegencyUiState by viewModel.searchRegencyUiState.collectAsStateWithLifecycle()
+
+    UserRegencyScreen(
+        query = query,
+        onQueryChange = viewModel::setSearchQuery,
+        userRegenciesUiState = userRegenciesUiState,
+        searchRegencyUiState = searchRegencyUiState,
+        onBackClick = onBackClick,
+        onRegencyClick = onRegencyClick,
+        onSaveRegency = viewModel::saveRegency,
+        onUnsaveRegencies = viewModel::unsaveRegencies,
+        modifier = modifier,
+    )
+}
+
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class,
     ExperimentalAnimationApi::class
 )
 @Composable
-fun SearchRegencyScreen(
-    navigateUp: () -> Unit,
-    navigateToRegencyWeather: (String) -> Unit,
+private fun UserRegencyScreen(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    userRegenciesUiState: UserRegenciesUiState,
+    searchRegencyUiState: SearchRegencyUiState,
+    onSaveRegency: (String, Boolean) -> Unit,
+    onUnsaveRegencies: (Set<String>) -> Unit,
+    onBackClick: () -> Unit,
+    onRegencyClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchRegencyViewModel = hiltViewModel(),
 ) {
-    val userRegencyUiState = viewModel.userRegencyUiState.collectAsStateWithLifecycle().value
-    val searchRegencyUiState = viewModel.searchRegencyUiState.collectAsStateWithLifecycle().value
+    val multiSelectionState = rememberMultiSelectionState()
+    val selectedRegencyIds = remember { mutableStateListOf<String>() }
 
     Scaffold(
         topBar = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val query by viewModel.searchQuery.collectAsStateWithLifecycle()
-                var active by rememberSaveable { mutableStateOf(false) }
+                var showTopAppBar by rememberSaveable { mutableStateOf(false) }
 
                 AnimatedVisibility(
-                    visible = !active,
+                    visible = !showTopAppBar,
                     enter = expandVertically(expandFrom = Alignment.Top) + fadeIn(),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
@@ -87,12 +116,29 @@ fun SearchRegencyScreen(
                         },
                         navigationIcon = {
                             IconButton(
-                                onClick = navigateUp,
+                                onClick = onBackClick,
                             ) {
                                 Icon(
                                     icon = WeatherQuakeIcons.ArrowBack,
                                     contentDescription = null
                                 )
+                            }
+                        },
+                        actions = {
+                            if (multiSelectionState.enabled) {
+                                IconButton(
+                                    onClick = {
+                                        val regencyIds = selectedRegencyIds.toSet()
+                                        onUnsaveRegencies(regencyIds)
+
+                                        multiSelectionState.enabled = false
+                                    },
+                                ) {
+                                    Icon(
+                                        icon = WeatherQuakeIcons.RemoveDone,
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -104,11 +150,11 @@ fun SearchRegencyScreen(
 
                 SearchBar(
                     query = query,
-                    onQueryChange = { viewModel.setSearchQuery(it) },
+                    onQueryChange = onQueryChange,
                     onSearch = {},
-                    active = active,
+                    active = showTopAppBar,
                     onActiveChange = {
-                        active = it
+                        showTopAppBar = it
                     },
                     placeholder = { Text(text = "Search city/regency") },
                     leadingIcon = {
@@ -118,11 +164,11 @@ fun SearchRegencyScreen(
                         )
                     },
                     trailingIcon = {
-                        if (active) {
+                        if (showTopAppBar) {
                             IconButton(
                                 onClick = {
-                                    viewModel.setSearchQuery("")
-                                    active = false
+                                    onQueryChange("")
+                                    showTopAppBar = false
                                 },
                             ) {
                                 Icon(
@@ -134,7 +180,16 @@ fun SearchRegencyScreen(
                     },
                 ) {
                     when (searchRegencyUiState) {
-                        SearchRegencyUiState.Loading -> Unit
+                        SearchRegencyUiState.Loading -> {
+                            Box(
+                                modifier = modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+
                         SearchRegencyUiState.EmptyQuery -> Unit
                         is SearchRegencyUiState.Success -> {
                             val saveableRegencies = searchRegencyUiState.regencies
@@ -171,7 +226,7 @@ fun SearchRegencyScreen(
                                             IconButton(
                                                 onClick = {
                                                     isSaved = !isSaved
-                                                    viewModel.saveRegency(
+                                                    onSaveRegency(
                                                         saveableRegency.regency.id,
                                                         isSaved
                                                     )
@@ -182,12 +237,12 @@ fun SearchRegencyScreen(
                                                     animationSpec = tween(500)
                                                 ) { saved ->
                                                     if (saved) {
-                                                        Icon.Icon(
-                                                            icon = WeatherQuakeIcons.Check,
+                                                        Icon(
+                                                            icon = WeatherQuakeIcons.Done,
                                                             contentDescription = null,
                                                         )
                                                     } else {
-                                                        Icon.Icon(
+                                                        Icon(
                                                             icon = WeatherQuakeIcons.Add,
                                                             contentDescription = null,
                                                         )
@@ -197,7 +252,7 @@ fun SearchRegencyScreen(
                                         },
                                         modifier = modifier
                                             .clickable {
-                                                navigateToRegencyWeather(saveableRegency.regency.id)
+                                                onRegencyClick(saveableRegency.regency.id)
                                             }
                                             .fillMaxWidth()
                                             .padding(vertical = 4.dp)
@@ -206,25 +261,34 @@ fun SearchRegencyScreen(
                             }
                         }
 
-                        is SearchRegencyUiState.Error -> Unit
+                        is SearchRegencyUiState.Error -> {
+                            Box(
+                                modifier = modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = searchRegencyUiState.message,
+                                    fontWeight = FontWeight.Light,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+                        }
                     }
                 }
 
             }
         },
     ) { paddingValues ->
-        Column {
-            Spacer(
-                modifier = Modifier
-                    .height(TOP_APP_BAR_HEIGHT + SEARCH_BAR_HEIGHT + 16.dp)
-            )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .padding(paddingValues)
+                .padding(top = 16.dp),
+        ) {
             CompositionLocalProvider(
                 LocalOverscrollConfiguration provides null
             ) {
-                val multiSelectionState = rememberMultiSelectionState()
-
-                val selectedRegencyIds = remember { mutableStateListOf<String>() }
-
                 LaunchedEffect(
                     key1 = multiSelectionState,
                     key2 = selectedRegencyIds.size,
@@ -234,10 +298,19 @@ fun SearchRegencyScreen(
                     }
                 }
 
-                when (userRegencyUiState) {
-                    UserRegencyUiState.Loading -> Unit
-                    is UserRegencyUiState.Success -> {
-                        val userRegencies = userRegencyUiState.regencies
+                when (userRegenciesUiState) {
+                    UserRegenciesUiState.Loading -> {
+                        Box(
+                            modifier = modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    is UserRegenciesUiState.Success -> {
+                        val userRegencies = userRegenciesUiState.regencies
                         LazyColumn {
                             multiSelectionItems(
                                 items = userRegencies,
@@ -282,7 +355,7 @@ fun SearchRegencyScreen(
                                             exit = scaleOut() + fadeOut(),
                                         ) {
                                             Icon(
-                                                icon = WeatherQuakeIcons.Check,
+                                                icon = WeatherQuakeIcons.Done,
                                                 contentDescription = null,
                                             )
                                         }
@@ -291,13 +364,8 @@ fun SearchRegencyScreen(
                             }
                         }
                     }
-
-                    is UserRegencyUiState.Error -> Unit
                 }
             }
         }
     }
 }
-
-private val TOP_APP_BAR_HEIGHT = 64.dp
-private val SEARCH_BAR_HEIGHT = 56.dp

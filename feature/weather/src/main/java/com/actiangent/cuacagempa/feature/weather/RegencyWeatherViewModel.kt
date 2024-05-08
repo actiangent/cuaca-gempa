@@ -29,7 +29,7 @@ class RegencyWeatherViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val regencyId: String = checkNotNull(savedStateHandle["regencyId"])
-    val uiState: StateFlow<RegencyWeatherUiState> = userDataRepository.userData
+    val regencyWeatherUiState: StateFlow<RegencyWeatherUiState> = userDataRepository.userData
         .flatMapLatest { userData ->
             combine(
                 regencyRepository.getRegency(regencyId),

@@ -3,11 +3,11 @@ package com.actiangent.cuacagempa.core.data.di
 import com.actiangent.cuacagempa.core.common.dispatcher.Dispatcher
 import com.actiangent.cuacagempa.core.common.dispatcher.WeatherQuakeDispatchers.IO
 import com.actiangent.cuacagempa.core.data.repository.CompositeUserDistrictWeatherRepository
+import com.actiangent.cuacagempa.core.data.repository.DefaultRegencyRepository
+import com.actiangent.cuacagempa.core.data.repository.RegencyRepository
 import com.actiangent.cuacagempa.core.data.repository.UserDistrictWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.location.DefaultLocationRepository
-import com.actiangent.cuacagempa.core.data.repository.DefaultRegencyRepository
 import com.actiangent.cuacagempa.core.data.repository.location.LocationRepository
-import com.actiangent.cuacagempa.core.data.repository.RegencyRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.DefaultUserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.DefaultWeatherRepository

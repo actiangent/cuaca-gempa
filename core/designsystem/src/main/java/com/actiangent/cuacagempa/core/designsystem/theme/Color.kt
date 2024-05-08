@@ -1,6 +1,5 @@
 package com.actiangent.cuacagempa.core.designsystem.theme
 
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 /*
@@ -42,69 +41,69 @@ internal val SlateGray100 = Color.White // Light On Secondary
  * Brush, taken from https://webgradients.com/
  */
 
-// Day - (Clear - Mostly Cloudy)
-val WinterNeva = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFFaccbee),
-        Color(0xFFe7f0fd)
-    )
-)
-
-// Day - (Overcast, Haze, Smoke)
-val PremiumWhite = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFFd5d4d0),
-        Color(0xFFd5d4d0),
-        Color(0xFFeeeeec),
-        Color(0xFFefeeec),
-        Color(0xFFe9e9e7)
-    )
-)
-
-// Day - (Light Rain, Rain, Isolated Shower)
-val FebruaryInk = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFFc3cfe2),
-        Color(0xFFf5f7fa)
-    )
-)
-
-// Day - (Heavy Rain, Severe Thunderstorm)
-val MountainRock = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF868f96),
-        Color(0xFF596164)
-    )
-)
-
-// Night - (Clear - Mostly Cloudy)
-val NightSky = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF1e3c72),
-        Color(0xFF2a5298)
-    )
-)
-
-// Night - (Overcast, Haze, Smoke)
-val SolidStone = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF243949),
-        Color(0xFF517fa4)
-    )
-)
-
-// Night - (Light Rain, Rain, Isolated Shower)
-val EternalConstance = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF09203f),
-        Color(0xFF537895)
-    )
-)
-
-// Night - (Heavy Rain, Severe Thunderstorm)
-val ViciousStance = Brush.verticalGradient(
-    colors = listOf(
-        Color(0xFF29323c),
-        Color(0xFF485563)
-    )
-)
+//// Day - (Clear - Mostly Cloudy)
+//val WinterNeva = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFFaccbee),
+//        Color(0xFFe7f0fd)
+//    )
+//)
+//
+//// Day - (Overcast, Haze, Smoke)
+//val PremiumWhite = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFFd5d4d0),
+//        Color(0xFFd5d4d0),
+//        Color(0xFFeeeeec),
+//        Color(0xFFefeeec),
+//        Color(0xFFe9e9e7)
+//    )
+//)
+//
+//// Day - (Light Rain, Rain, Isolated Shower)
+//val FebruaryInk = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFFc3cfe2),
+//        Color(0xFFf5f7fa)
+//    )
+//)
+//
+//// Day - (Heavy Rain, Severe Thunderstorm)
+//val MountainRock = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFF868f96),
+//        Color(0xFF596164)
+//    )
+//)
+//
+//// Night - (Clear - Mostly Cloudy)
+//val NightSky = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFF1e3c72),
+//        Color(0xFF2a5298)
+//    )
+//)
+//
+//// Night - (Overcast, Haze, Smoke)
+//val SolidStone = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFF243949),
+//        Color(0xFF517fa4)
+//    )
+//)
+//
+//// Night - (Light Rain, Rain, Isolated Shower)
+//val EternalConstance = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFF09203f),
+//        Color(0xFF537895)
+//    )
+//)
+//
+//// Night - (Heavy Rain, Severe Thunderstorm)
+//val ViciousStance = Brush.verticalGradient(
+//    colors = listOf(
+//        Color(0xFF29323c),
+//        Color(0xFF485563)
+//    )
+//)

@@ -27,16 +27,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
 import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
+import com.actiangent.cuacagempa.core.ui.ForecastList
 
 @Composable
-internal fun RegencyWeatherScreen(
-    navigateUp: () -> Unit,
+fun RegencyWeatherRoute(
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegencyWeatherViewModel = hiltViewModel(),
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val regencyWeatherUiState by viewModel.regencyWeatherUiState.collectAsStateWithLifecycle()
+    RegencyWeatherScreen(
+        regencyWeatherUiState = regencyWeatherUiState,
+        onSaveRegency = viewModel::saveRegency,
+        onBackClick = onBackClick,
+        modifier = modifier,
+    )
+}
 
-    when (uiState) {
+@Composable
+private fun RegencyWeatherScreen(
+    regencyWeatherUiState: RegencyWeatherUiState,
+    onSaveRegency: (Boolean) -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (regencyWeatherUiState) {
         is RegencyWeatherUiState.Loading -> {
             Box(
                 contentAlignment = Alignment.Center,
@@ -54,7 +69,7 @@ internal fun RegencyWeatherScreen(
                         title = {},
                         navigationIcon = {
                             IconButton(
-                                onClick = navigateUp,
+                                onClick = onBackClick,
                             ) {
                                 Icon(
                                     icon = WeatherQuakeIcons.ArrowBack,
@@ -63,11 +78,13 @@ internal fun RegencyWeatherScreen(
                             }
                         },
                         actions = {
-                            var isSaved by remember { mutableStateOf(uiState.regency.isSaved) }
+                            var isSaved by remember {
+                                mutableStateOf(regencyWeatherUiState.regency.isSaved)
+                            }
                             IconButton(
                                 onClick = {
                                     isSaved = !isSaved
-                                    viewModel.saveRegency(isSaved)
+                                    onSaveRegency(isSaved)
                                 },
                             ) {
                                 Crossfade(
@@ -76,7 +93,7 @@ internal fun RegencyWeatherScreen(
                                 ) { saved ->
                                     if (saved) {
                                         Icon(
-                                            icon = WeatherQuakeIcons.Check,
+                                            icon = WeatherQuakeIcons.Done,
                                             contentDescription = null,
                                         )
                                     } else {
@@ -100,8 +117,8 @@ internal fun RegencyWeatherScreen(
                         .padding(paddingValues)
                         .padding(horizontal = 16.dp)
                 ) {
-                    val saveableRegency = uiState.regency
-                    val forecasts = uiState.forecasts
+                    val saveableRegency = regencyWeatherUiState.regency
+                    val forecasts = regencyWeatherUiState.forecasts
                     ForecastSummary(
                         regency = saveableRegency.regency,
                         forecast = forecasts.first(),

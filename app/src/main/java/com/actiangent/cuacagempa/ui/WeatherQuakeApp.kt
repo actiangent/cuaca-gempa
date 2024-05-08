@@ -3,23 +3,16 @@ package com.actiangent.cuacagempa.ui
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -29,103 +22,61 @@ import androidx.navigation.navOptions
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBar
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBarItem
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
-import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
 import com.actiangent.cuacagempa.feature.weather.navigation.navigateToWeatherGraph
 import com.actiangent.cuacagempa.ui.navigation.TopLevelDestination
 import com.actiangent.cuacagempa.ui.navigation.WeatherQuakeNavHost
 
 @Composable
 fun WeatherQuakeApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentTopLevelDestination: TopLevelDestination? by remember {
-        derivedStateOf {
-            when (currentBackStackEntry?.destination?.route) {
-                "weather_graph" -> TopLevelDestination.WEATHER
-                "earthquake_route" -> TopLevelDestination.EARTHQUAKE
-                else -> null
-            }
-        }
-    }
+    val currentDestination = currentBackStackEntry?.destination
 
     Scaffold(
         bottomBar = {
-            WeatherQuakeBottomBar(
-                destinations = TopLevelDestination.values().asList(),
-                onNavigateToDestination = { destination ->
-                    val topLevelNavOptions = navOptions {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
-                        launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
-                        restoreState = true
-                    }
-
-                    when (destination) {
-                        TopLevelDestination.WEATHER -> navController.navigateToWeatherGraph(
-                            topLevelNavOptions
-                        )
-
-                        TopLevelDestination.EARTHQUAKE -> navController.navigate("earthquake_route")
-                    }
-                },
-                currentDestination = currentBackStackEntry?.destination,
-            )
-        }
-    ) { paddingValues ->
-        Column(modifier = modifier.padding(paddingValues)) {
-            val destination = currentTopLevelDestination
-            if (destination != null) {
-                WeatherQuakeTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = destination.titleTextId),
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .weight(1f)
-                        )
-                    },
-                    navigateToSettings = { }
+            if (
+                currentDestination.isCurrentDestinationTopLevelDestination(
+                    TopLevelDestination.values().toList()
                 )
-            }
+            ) {
+                WeatherQuakeBottomBar(
+                    destinations = TopLevelDestination.values().asList(),
+                    onNavigateToDestination = { destination ->
+                        val topLevelNavOptions = navOptions {
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
+                        }
 
-            WeatherQuakeNavHost(
-                navController = navController
-            )
-        }
-    }
-}
+                        when (destination) {
+                            TopLevelDestination.WEATHER ->
+                                navController.navigateToWeatherGraph(topLevelNavOptions)
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun WeatherQuakeTopAppBar(
-    title: @Composable () -> Unit,
-    navigateToSettings: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    TopAppBar(
-        title = title,
-        navigationIcon = {},
-        actions = {
-            IconButton(onClick = navigateToSettings) {
-                Icon(
-                    icon = WeatherQuakeIcons.SettingsFilled,
-                    contentDescription = "settings",
+                            TopLevelDestination.EARTHQUAKE ->
+                                navController.navigate("earthquake_route", topLevelNavOptions)
+                        }
+                    },
+                    currentDestination = currentDestination,
                 )
             }
         },
-        modifier = modifier,
-    )
+    ) { paddingValues ->
+        WeatherQuakeNavHost(
+            navController = navController,
+            modifier = modifier
+                .padding(paddingValues),
+        )
+    }
 }
 
 @Composable
@@ -161,34 +112,39 @@ private fun WeatherQuakeBottomBar(
 
             WeatherQuakeNavigationBarItem(
                 selected = selected,
-                onSelected = { onNavigateToDestination(destination) },
+                onClick = { onNavigateToDestination(destination) },
                 icon = {
                     Icon(
                         icon = destination.unselectedIcon,
-                        contentDescription = "",
+                        contentDescription = null,
                         tint = iconTint,
                     )
                 },
                 label = {
                     Text(
-                        text = stringResource(id = destination.iconTextId),
+                        text = stringResource(id = destination.textId),
                         color = labelTint,
                         style = MaterialTheme.typography.labelLarge,
                     )
                 },
-                interactionSource = interactionSource,
                 selectedIcon = {
                     Icon(
                         icon = destination.selectedIcon,
-                        contentDescription = "",
+                        contentDescription = null,
                         tint = iconTint,
                     )
                 },
+                interactionSource = interactionSource,
                 alwaysShowLabel = false,
             )
         }
     }
 }
+
+private fun NavDestination?.isCurrentDestinationTopLevelDestination(destinations: List<TopLevelDestination>) =
+    destinations.any {
+        this?.route?.contains(it.name, true) ?: false
+    }
 
 // taken from android/nowinandroid
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =

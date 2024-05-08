@@ -9,9 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -43,13 +42,11 @@ object WeatherQuakeIcons {
     val ArrowDropDown = DrawableResourceIcon(R.drawable.ic_arrow_drop_down_24)
     val ArrowDropUp = DrawableResourceIcon(R.drawable.ic_arrow_drop_up_24)
     val WeatherMix = DrawableResourceIcon(R.drawable.ic_weather_mix_24)
-    val ArrowForward = ImageVectorIcon(Icons.Rounded.ArrowForward)
     val Clear = ImageVectorIcon(Icons.Rounded.Clear)
     val Search = ImageVectorIcon(Icons.Rounded.Search)
-    val AddLocation = DrawableResourceIcon(R.drawable.ic_add_location_24)
-    val LocationAdded = DrawableResourceIcon(R.drawable.ic_location_added_24)
     val Add = ImageVectorIcon(Icons.Rounded.Add)
-    val Check = ImageVectorIcon(Icons.Rounded.Check)
+    val Done = ImageVectorIcon(Icons.Rounded.Done)
+    val RemoveDone = DrawableResourceIcon(R.drawable.ic_remove_done_24)
 }
 
 fun WeatherCondition.icon(

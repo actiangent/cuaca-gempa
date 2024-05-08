@@ -1,4 +1,4 @@
-package com.actiangent.cuacagempa.feature.weather.weather
+package com.actiangent.cuacagempa.feature.weather
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -9,6 +9,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -43,12 +44,12 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun WeatherGraph(
+internal fun WeatherGraph(
     weathers: List<Weather>,
     selectedIndex: Int,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
-    onSelected: (Int) -> Unit,
+    onSelectedIndex: (Int) -> Unit,
 ) {
     val weatherEntries = weathers.map { weather ->
         val temperature = weather.temperature
@@ -61,6 +62,7 @@ fun WeatherGraph(
     Box(
         modifier = modifier
             .horizontalScroll(scrollState)
+            .padding(top = 16.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -165,7 +167,7 @@ fun WeatherGraph(
                 .pointerInput(itemCount) {
                     detectTapGestures { offset ->
                         val index = calculateItemIndex(itemCount - 1, offset)
-                        onSelected(index)
+                        onSelectedIndex(index)
                     }
                 },
         )

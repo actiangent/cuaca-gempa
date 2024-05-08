@@ -16,6 +16,10 @@ class DefaultUserDataRepository @Inject constructor(
         weatherQuakePreferences.setUserRegencyIds(regencyIds)
     }
 
+    override suspend fun setSavedUserRegencyIds(regencyIds: Set<String>) {
+        weatherQuakePreferences.setSavedUserRegencyIds(regencyIds)
+    }
+
     override suspend fun setUserRegencyIdSaved(regencyId: String, saved: Boolean) {
         weatherQuakePreferences.setUserRegencyIdSaved(regencyId, saved)
     }

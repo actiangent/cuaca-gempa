@@ -26,7 +26,7 @@ fun WeatherQuakeNavigationBar(
 @Composable
 fun RowScope.WeatherQuakeNavigationBarItem(
     selected: Boolean,
-    onSelected: () -> Unit,
+    onClick: () -> Unit,
     icon: @Composable () -> Unit,
     label: @Composable () -> Unit,
     interactionSource: MutableInteractionSource,
@@ -36,7 +36,7 @@ fun RowScope.WeatherQuakeNavigationBarItem(
 ) {
     NavigationBarItem(
         selected = selected,
-        onClick = onSelected,
+        onClick = onClick,
         icon = if (selected) selectedIcon else icon,
         label = label,
         alwaysShowLabel = alwaysShowLabel,

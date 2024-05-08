@@ -7,18 +7,16 @@ import com.actiangent.cuacagempa.core.data.model.asRegencyWeatherEntity
 import com.actiangent.cuacagempa.core.database.dao.ProvinceDao
 import com.actiangent.cuacagempa.core.database.dao.RegencyDao
 import com.actiangent.cuacagempa.core.database.dao.WeatherDao
-import com.actiangent.cuacagempa.core.database.model.asRegency
 import com.actiangent.cuacagempa.core.location.LocationDataSource
 import com.actiangent.cuacagempa.core.model.Forecast
-import com.actiangent.cuacagempa.core.model.RegencyForecasts
 import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import com.actiangent.cuacagempa.core.model.Weather
 import com.actiangent.cuacagempa.core.model.chunkByDate
 import com.actiangent.cuacagempa.core.network.RemoteWeatherDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
@@ -34,29 +32,22 @@ class DefaultWeatherRepository @Inject constructor(
     override fun getLocalRegencyWeatherForecast(
         regencyId: String,
         temperatureUnit: TemperatureUnit
-    ): Flow<Result<RegencyForecasts>> {
-        return combine(
-            regencyDao.getRegency(regencyId),
-            regencyWeatherDao.getRegencyWeatherForecast(regencyId, temperatureUnit.name),
-        ) { rawRegency, weathers ->
-            val regency = rawRegency.asRegency()
-            try {
-                if (weathers.isEmpty()) {
-                    Result.Loading
-                } else {
-                    val forecasts = weathers.chunkByDate()
-                    Result.Success(
-                        RegencyForecasts(
-                            regency = regency,
-                            forecasts = forecasts
+    ): Flow<Result<List<Forecast>>> =
+        regencyWeatherDao.getRegencyWeatherForecast(regencyId, temperatureUnit.name)
+            .map { weathers ->
+                try {
+                    if (weathers.isEmpty()) {
+                        Result.Loading
+                    } else {
+                        Result.Success(
+                            data = weathers.chunkByDate()
                         )
-                    )
+                    }
+                } catch (e: Throwable) {
+                    Result.Error(exception = e)
                 }
-            } catch (e: Throwable) {
-                Result.Error(exception = e)
             }
-        }
-    }
+
 
     override fun getRemoteWeatherForecast(
         regencyId: String,

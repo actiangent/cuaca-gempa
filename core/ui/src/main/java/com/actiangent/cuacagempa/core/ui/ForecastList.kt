@@ -1,6 +1,10 @@
-package com.actiangent.cuacagempa.feature.weather
+package com.actiangent.cuacagempa.core.ui
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -12,100 +16,83 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import com.actiangent.cuacagempa.core.common.datetime.text
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
 import com.actiangent.cuacagempa.core.designsystem.icon.WeatherQuakeIcons
 import com.actiangent.cuacagempa.core.designsystem.icon.icon
 import com.actiangent.cuacagempa.core.model.Forecast
-import com.actiangent.cuacagempa.core.model.Regency
 import com.actiangent.cuacagempa.core.model.asWeatherCondition
 import com.actiangent.cuacagempa.core.model.temperature
 
 @Composable
-internal fun ForecastSummary(
-    regency: Regency,
-    forecast: Forecast,
-    modifier: Modifier = Modifier
-) {
-    val weather = forecast.summary
-    val weatherCondition = forecast.summary.code.asWeatherCondition()
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top,
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(
-                shape = RoundedCornerShape(16.dp)
-            )
-            .background(
-                brush = weatherCondition.brush(weather.timestamp.hour)
-            )
-            .padding(horizontal = 16.dp, vertical = 32.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.Start
-        ) {
-            Icon(
-                icon = weatherCondition.icon(weather.timestamp.hour),
-                contentDescription = null,
-                modifier = Modifier.size(96.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "$weatherCondition",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = weather.timestamp.date.display(),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.End,
-            )
-        }
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(
-                text = regency.name,
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.End,
-            )
-        }
-    }
-}
-
-@Composable
-internal fun ForecastList(
+fun ForecastList(
     forecasts: List<Forecast>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    selectedForecastIndex: Int? = null,
+    onSelectedForecastIndex: ((Int) -> Unit)? = null,
 ) {
+    val itemCount = forecasts.size
+
+    val animatable = remember { Animatable(0f) }
+
     Column(
-        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .graphicsLayer {
+                alpha = animatable.value
+            },
     ) {
-        repeat(forecasts.size) { index ->
+        repeat(itemCount) { index ->
             val forecast = forecasts[index]
             ForecastItem(
                 forecast = forecast,
-                modifier = modifier
+                modifier = Modifier
+                    .then(
+                        if (enabled
+                            && (selectedForecastIndex != null)
+                            && onSelectedForecastIndex != null
+                        )
+                            Modifier
+                                .clickable { onSelectedForecastIndex(index) }
+                                .then(
+                                    if (selectedForecastIndex == index)
+                                        Modifier
+                                            .background(color = Color.White.copy(alpha = 0.35f))
+                                    else
+                                        Modifier
+                                )
+                        else
+                            Modifier
+                    )
+                    .padding(horizontal = 4.dp)
             )
             if (index < (forecasts.size - 1)) {
                 Divider()
             }
         }
     }
+    LaunchedEffect(Unit) {
+        animatable.animateTo(
+            1f,
+            animationSpec = tween(durationMillis = 750, easing = LinearEasing)
+        )
+    }
 }
 
 @Composable
-internal fun ForecastItem(
+private fun ForecastItem(
     forecast: Forecast,
     modifier: Modifier = Modifier,
 ) {
@@ -128,7 +115,7 @@ internal fun ForecastItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = date.display(),
+                text = date.text(),
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.width(12.dp))

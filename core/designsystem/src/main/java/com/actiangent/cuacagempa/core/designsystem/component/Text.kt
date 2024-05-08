@@ -16,7 +16,7 @@ fun TextIcon(
     modifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    spacingValues: PaddingValues = PaddingValues(2.dp)
+    spacingValues: PaddingValues = PaddingValues(horizontal = 2.dp)
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
