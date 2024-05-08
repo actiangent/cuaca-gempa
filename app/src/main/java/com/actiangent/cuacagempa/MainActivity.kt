@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onLocationGranted() {
-        viewModel.requestUpdatedLocation()
+        viewModel.startWeatherSyncWork()
     }
 
     private fun onLocationDenied() {

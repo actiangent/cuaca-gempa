@@ -13,11 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import javax.inject.Inject
@@ -58,7 +56,7 @@ class UserRegencyForecastViewModel @Inject constructor(
         .map { regencies -> regencies.map(Regency::id) }
         .flatMapLatest { regencyIds ->
             selectedUserRegencyIndex
-                .takeWhile {index ->
+                .takeWhile { index ->
                     (index < regencyIds.size)
                         .also { isNotIndexOutOfBounds ->
                             if (!isNotIndexOutOfBounds) {

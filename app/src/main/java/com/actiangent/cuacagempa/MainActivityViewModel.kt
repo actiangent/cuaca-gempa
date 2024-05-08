@@ -10,8 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,18 +39,29 @@ class MainActivityViewModel @Inject constructor(
     userDataRepository: UserDataRepository,
     private val syncManager: WorkManagerSyncManager
 ) : ViewModel() {
+
+    private val userRegencyIds = userDataRepository.userData
+        .map { userData -> userData.userRegencyIds }
+
     private val _locationRequestError: MutableStateFlow<String?> = MutableStateFlow(null)
     private val _showPermissionDialog: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
-        MainActivityUiState.Success(
-            isLocationCached = false
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = MainActivityUiState.Loading
+    val uiState: StateFlow<MainActivityUiState> = merge(
+        userRegencyIds.take(1),
+        userRegencyIds.drop(1).debounce(5000L)
     )
+        .onEach {
+            syncManager.startWeatherSyncWork()
+        }
+        .map { regencyIds ->
+            MainActivityUiState.Success(
+                isLocationCached = regencyIds.isNotEmpty()
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = MainActivityUiState.Loading
+        )
 
     val errorState: StateFlow<WeatherQuakeErrorState> =
         combine(
@@ -62,7 +78,7 @@ class MainActivityViewModel @Inject constructor(
             initialValue = WeatherQuakeErrorState()
         )
 
-    fun requestUpdatedLocation() {
+    fun startWeatherSyncWork() {
         viewModelScope.launch {
             if (!locationRepository.isGpsEnabled()) {
                 showLocationRequestError()
