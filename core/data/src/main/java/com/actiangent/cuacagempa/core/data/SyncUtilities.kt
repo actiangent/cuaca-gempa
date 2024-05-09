@@ -29,12 +29,15 @@ suspend fun WeatherSynchronizer.changeRegencyWeatherSync(
     // expirationPeriod: DateTimePeriod = weatherExpirationPeriod,
     modelInserter: suspend (NetworkRegencyWeather) -> Unit,
     modelDeleter: suspend () -> Unit,
+    shouldSaveRegencyId: Boolean,
 ) {
     val data = weatherFetcher()
     modelInserter(data)
 
-    val regencyId = data.id
-    addUserRegencyId(regencyId)
+    if (shouldSaveRegencyId) {
+        val regencyId = data.id
+        addUserRegencyId(regencyId)
+    }
 
     modelDeleter()
 }

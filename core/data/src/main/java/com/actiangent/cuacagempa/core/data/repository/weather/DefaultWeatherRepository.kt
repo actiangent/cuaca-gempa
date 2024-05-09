@@ -104,7 +104,8 @@ class DefaultWeatherRepository @Inject constructor(
         },
         modelDeleter = {
             regencyWeatherDao.deleteOldWeatherCache()
-        }
+        },
+        shouldSaveRegencyId = false,
     )
 
     override suspend fun syncByLocationWith(synchronizer: WeatherSynchronizer) =
@@ -139,7 +140,8 @@ class DefaultWeatherRepository @Inject constructor(
             },
             modelDeleter = {
                 regencyWeatherDao.deleteOldWeatherCache()
-            }
+            },
+            shouldSaveRegencyId = true,
         )
 }
 
