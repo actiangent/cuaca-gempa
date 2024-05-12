@@ -16,5 +16,5 @@ interface WeatherRepository : WeatherSyncable {
     fun getRemoteWeatherForecast(
         regencyId: String,
         temperatureUnit: TemperatureUnit
-    ): Flow<List<Forecast>>
+    ): Flow<Result<List<Forecast>>>
 }

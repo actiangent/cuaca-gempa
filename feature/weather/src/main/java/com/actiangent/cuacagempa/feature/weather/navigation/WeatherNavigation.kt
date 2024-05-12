@@ -11,7 +11,7 @@ import com.actiangent.cuacagempa.feature.weather.RegencyWeatherRoute
 import com.actiangent.cuacagempa.feature.weather.UserRegencyForecastRoute
 import com.actiangent.cuacagempa.feature.weather.UserRegencyRoute
 
-const val WEATHER_GRAPH_ROUTE = "weather_graph"
+const val WEATHER_GRAPH_ROUTE_PATTERN = "weather_graph"
 
 const val USER_REGENCY_WEATHER_ROUTE = "user_regency_weather_route"
 private const val MANAGE_USER_REGENCY_ROUTE = "manage_user_regency_route"
@@ -19,7 +19,7 @@ private const val REGENCY_WEATHER_ROUTE = "regency_weather_route"
 private const val REGENCY_ID_ARG = "regencyId"
 
 fun NavController.navigateToWeatherGraph(navOptions: NavOptions) =
-    navigate(WEATHER_GRAPH_ROUTE, navOptions)
+    navigate(WEATHER_GRAPH_ROUTE_PATTERN, navOptions)
 
 fun NavController.navigateToManageUserRegency() =
     navigate(MANAGE_USER_REGENCY_ROUTE)
@@ -34,7 +34,7 @@ fun NavGraphBuilder.weatherGraph(
     onRegencyClick: (String) -> Unit,
 ) {
     navigation(
-        route = WEATHER_GRAPH_ROUTE,
+        route = WEATHER_GRAPH_ROUTE_PATTERN,
         startDestination = USER_REGENCY_WEATHER_ROUTE,
     ) {
         composable(

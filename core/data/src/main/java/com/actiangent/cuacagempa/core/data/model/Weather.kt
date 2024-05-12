@@ -6,7 +6,7 @@ import com.actiangent.cuacagempa.core.network.model.NetworkWeather
 fun NetworkWeather.asRegencyWeatherEntity(
     regencyId: String
 ) = RegencyWeatherEntity(
-    timestamp = timestamp,
+    dateTime = datetime,
     weatherCode = weatherCode,
     temperatureCelsius = temperatureCelsius,
     temperatureFahrenheit = temperatureFahrenheit,

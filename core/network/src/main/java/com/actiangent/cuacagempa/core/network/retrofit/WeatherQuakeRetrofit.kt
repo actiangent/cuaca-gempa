@@ -1,30 +1,47 @@
 package com.actiangent.cuacagempa.core.network.retrofit
 
+import com.actiangent.cuacagempa.core.network.RemoteEarthquakeDataSource
 import com.actiangent.cuacagempa.core.network.RemoteWeatherDataSource
+import com.actiangent.cuacagempa.core.network.converter.Json
+import com.actiangent.cuacagempa.core.network.converter.Xml
+import com.actiangent.cuacagempa.core.network.model.NetworkEarthquake
 import com.actiangent.cuacagempa.core.network.model.NetworkRegencyWeather
+import com.actiangent.cuacagempa.core.network.model.NetworkResponseEarthquake
+import com.actiangent.cuacagempa.core.network.model.NetworkResponseEarthquakeData
+import com.actiangent.cuacagempa.core.network.model.NetworkResponseEarthquakeInfo
+import com.actiangent.cuacagempa.core.network.model.NetworkResponseEarthquakeListData
 import com.actiangent.cuacagempa.core.network.model.NetworkResponseWeatherArea
 import com.actiangent.cuacagempa.core.network.model.NetworkResponseWeatherData
 import com.actiangent.cuacagempa.core.network.model.NetworkResponseWeatherParameter
 import com.actiangent.cuacagempa.core.network.model.NetworkWeather
+import com.actiangent.cuacagempa.core.network.retrofit.EarthquakeRetrofit.NetworkEarthquakeParser.extract
 import com.actiangent.cuacagempa.core.network.retrofit.WeatherRetrofit.NetworkWeatherParser.extract
 import kotlinx.datetime.Instant
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Path
 import javax.inject.Inject
-import javax.inject.Singleton
 
 const val baseUrl = "https://data.bmkg.go.id/DataMKG/"
 
 private interface WeatherApi {
 
+    @Xml
     @GET("MEWS/DigitalForecast/DigitalForecast-{provinceEndpoint}.xml")
     suspend fun getProvinceWeather(@Path("provinceEndpoint") endpoint: String): NetworkResponseWeatherData
 }
 
-private interface EarthQuakeApi
+private interface EarthquakeApi {
 
-@Singleton
+    @Json
+    @GET("TEWS/autogempa.json")
+    suspend fun getRecentEarthQuake(): NetworkResponseEarthquakeInfo<NetworkResponseEarthquakeData>
+
+    @Json
+    @GET("TEWS/gempaterkini.json")
+    suspend fun getLatestCautiousEarthquakes(): NetworkResponseEarthquakeInfo<NetworkResponseEarthquakeListData>
+}
+
 class WeatherRetrofit @Inject constructor(
     retrofit: Retrofit
 ) : RemoteWeatherDataSource {
@@ -48,7 +65,7 @@ class WeatherRetrofit @Inject constructor(
         private fun NetworkResponseWeatherArea.toNetworkRegencyWeather(): NetworkRegencyWeather =
             parameters?.let { parameters ->
                 // each parameter representing value with corresponding id's
-                // (weather, humidity(hu), temperature(t), wind direction (wd))
+                // (weather, humidity(hu), temperature(t), wind direction(wd))
                 val filteredParameters = parameters
                     .filter { p -> p.id in setOf("hu", "t", "weather", "wd", "ws") }
                     .sortedBy { id }
@@ -62,7 +79,7 @@ class WeatherRetrofit @Inject constructor(
 
                 val networkWeathers = timestamps.mapIndexed { index, timestamp ->
                     NetworkWeather(
-                        timestamp = timestamp,
+                        datetime = timestamp,
                         weatherCode = weathers[index],
                         temperatureCelsius = temperatures[index].first,
                         temperatureFahrenheit = temperatures[index].second,
@@ -134,5 +151,47 @@ class WeatherRetrofit @Inject constructor(
                     }
                 }
             } else emptyList()
+    }
+}
+
+class EarthquakeRetrofit @Inject constructor(
+    retrofit: Retrofit
+) : RemoteEarthquakeDataSource {
+
+    private val earthquakeApi = retrofit.create(EarthquakeApi::class.java)
+
+    override suspend fun getRecentEarthQuake(): NetworkEarthquake =
+        earthquakeApi.getRecentEarthQuake().extract()
+
+    override suspend fun getLatestCautiousEarthquakes(): List<NetworkEarthquake> =
+        earthquakeApi.getLatestCautiousEarthquakes().extract()
+
+
+    private object NetworkEarthquakeParser {
+
+        fun NetworkResponseEarthquakeInfo<NetworkResponseEarthquakeData>.extract() =
+            data.earthquake.toNetworkEarthquake()
+
+        fun NetworkResponseEarthquakeInfo<NetworkResponseEarthquakeListData>.extract() =
+            data.earthquake.map { it.toNetworkEarthquake() }
+
+        private fun NetworkResponseEarthquake.toNetworkEarthquake(): NetworkEarthquake {
+            val (lat, lon) = latLon.split(",")
+                .take(2)
+                .map(String::toDouble)
+            val magnitude = magnitude.toDouble()
+            val depth = depth
+                .replace(Regex("[^0-9]"), "")
+                .toInt()
+
+            return NetworkEarthquake(
+                dateTime = dateTime,
+                latitude = lat,
+                longitude = lon,
+                magnitude = magnitude,
+                depth = depth,
+                shakemapEndpoint = shakemapEndpoint,
+            )
+        }
     }
 }

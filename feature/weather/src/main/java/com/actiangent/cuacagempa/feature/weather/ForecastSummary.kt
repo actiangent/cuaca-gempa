@@ -43,7 +43,7 @@ internal fun ForecastSummary(
                 shape = RoundedCornerShape(16.dp)
             )
             .drawBehind {
-                val twoColorGradient = weatherCondition.gradient(weather.timestamp.hour)
+                val twoColorGradient = weatherCondition.gradient(weather.dateTime.hour)
                 drawRect(
                     brush = Brush.verticalGradient(
                         colors = listOf(
@@ -59,7 +59,7 @@ internal fun ForecastSummary(
             horizontalAlignment = Alignment.Start
         ) {
             Icon(
-                icon = weatherCondition.icon(weather.timestamp.hour),
+                icon = weatherCondition.icon(weather.dateTime.hour),
                 contentDescription = null,
                 modifier = Modifier.size(96.dp)
             )
@@ -70,7 +70,7 @@ internal fun ForecastSummary(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = weather.timestamp.date.text(),
+                text = weather.dateTime.date.text(),
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.End,
             )

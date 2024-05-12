@@ -1,6 +1,7 @@
 package com.actiangent.cuacagempa.feature.weather
 
 import android.util.LayoutDirection
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -239,7 +240,7 @@ private fun UserRegencyForecastScreen(
                                     val selectedWeather = weathers[selectedWeatherIndex]
                                     currentTwoColorGradient = selectedWeather.code
                                         .asWeatherCondition()
-                                        .gradient(selectedWeather.timestamp.hour)
+                                        .gradient(selectedWeather.dateTime.hour)
                                 }
                             }
 
@@ -322,7 +323,7 @@ private fun RegencyForecastPagerIndicators(
                 0.1f at delay + (indicatorCount * delay)
             })
         )
-    }.map(State<Float>::value)
+    }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -338,7 +339,7 @@ private fun RegencyForecastPagerIndicators(
                         drawCircle(
                             color = Color.Gray.copy(
                                 alpha = if (isLoading) {
-                                    alphas[currentIndex]
+                                    alphas[currentIndex].value
                                 } else if (currentIndex == index) {
                                     0.7f
                                 } else {
@@ -387,7 +388,7 @@ private fun PopulatedForecastInfoContent(
     LaunchedEffect(selectedWeatherIndex) {
         onSelectedForecastIndex(
             forecasts.indexOf(
-                forecasts.firstByDate(selectedWeather.timestamp.date)
+                forecasts.firstByDate(selectedWeather.dateTime.date)
             )
         )
     }
@@ -396,7 +397,7 @@ private fun PopulatedForecastInfoContent(
         if (selectedForecastFilterIndex == ForecastFilter.DAILY.ordinal) {
             onSelectedWeatherIndex(
                 weathers.indexOf(
-                    weathers.firstByDate(selectedForecast.summary.timestamp.date)
+                    weathers.firstByDate(selectedForecast.summary.dateTime.date)
                 )
             )
         }

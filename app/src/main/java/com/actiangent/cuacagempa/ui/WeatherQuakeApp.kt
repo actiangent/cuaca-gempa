@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -22,6 +21,7 @@ import androidx.navigation.navOptions
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBar
 import com.actiangent.cuacagempa.core.designsystem.component.WeatherQuakeNavigationBarItem
 import com.actiangent.cuacagempa.core.designsystem.icon.Icon.Companion.Icon
+import com.actiangent.cuacagempa.earthquake.navigation.navigateToEarthquake
 import com.actiangent.cuacagempa.feature.weather.navigation.navigateToWeatherGraph
 import com.actiangent.cuacagempa.ui.navigation.TopLevelDestination
 import com.actiangent.cuacagempa.ui.navigation.WeatherQuakeNavHost
@@ -63,7 +63,7 @@ fun WeatherQuakeApp(
                                 navController.navigateToWeatherGraph(topLevelNavOptions)
 
                             TopLevelDestination.EARTHQUAKE ->
-                                navController.navigate("earthquake_route", topLevelNavOptions)
+                                navController.navigateToEarthquake(topLevelNavOptions)
                         }
                     },
                     currentDestination = currentDestination,
@@ -151,9 +151,3 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
     this?.hierarchy?.any {
         it.route?.contains(destination.name, true) ?: false
     } ?: false
-
-@Preview
-@Composable
-fun WeatherQuakeAppPreview() {
-    WeatherQuakeApp()
-}

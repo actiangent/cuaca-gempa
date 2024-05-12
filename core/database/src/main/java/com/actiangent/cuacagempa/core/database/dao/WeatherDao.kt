@@ -13,7 +13,7 @@ interface WeatherDao {
     @Query(
         """
         SELECT
-            strftime('%Y-%m-%dT%H:%M:%S', timestamp, 'localtime') AS timestamp,
+            strftime('%Y-%m-%dT%H:%M:%S', datetime, 'localtime') AS dateTime,
             weather_code as code,
             (CASE 
                 WHEN LOWER(:temperatureUnit) = 'celsius' THEN regency_weather.temperature_celsius 
@@ -25,8 +25,8 @@ interface WeatherDao {
         FROM
             regency_weather
         WHERE
-            regency_id = :regencyId AND DATE(timestamp) >= DATE('now') 
-        ORDER BY timestamp
+            regency_id = :regencyId AND DATE(dateTime) >= DATE('now') 
+        ORDER BY dateTime
         """
     )
     // DATE('now') returns the current UTC date.
@@ -38,6 +38,6 @@ interface WeatherDao {
     @Insert
     suspend fun insertRegencyWeathers(weathers: List<RegencyWeatherEntity>)
 
-    @Query("DELETE FROM regency_weather WHERE DATE(timestamp) < DATE('now')")
-    suspend fun deleteOldWeatherCache()
+    @Query("DELETE FROM regency_weather WHERE DATE(datetime) < DATE('now')")
+    suspend fun deleteOldRegencyWeathers()
 }

@@ -32,11 +32,21 @@ object DatabaseModule {
 
                 db.execSQL(
                     """
-                    CREATE TRIGGER IF NOT EXISTS avoid_duplicate_timestamp_before_insert_regency_weather 
+                    CREATE TRIGGER IF NOT EXISTS avoid_duplicate_datetime_before_insert_regency_weather 
                        BEFORE INSERT ON regency_weather 
-                       WHEN EXISTS(SELECT 1 FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id)
+                       WHEN EXISTS(SELECT 1 FROM regency_weather WHERE datetime=NEW.datetime AND regency_id=NEW.regency_id)
                     BEGIN
-                        DELETE FROM regency_weather WHERE timestamp=NEW.timestamp AND regency_id=NEW.regency_id;
+                        DELETE FROM regency_weather WHERE datetime=NEW.datetime AND regency_id=NEW.regency_id;
+                    END
+                    """.trimIndent()
+                )
+                db.execSQL(
+                    """
+                    CREATE TRIGGER IF NOT EXISTS avoid_duplicate_datetime_before_insert_earthquake
+                       BEFORE INSERT ON earthquake 
+                       WHEN EXISTS(SELECT 1 FROM earthquake WHERE "datetime"=NEW."datetime")
+                    BEGIN
+                        DELETE FROM earthquake WHERE "datetime"=NEW."datetime";
                     END
                     """.trimIndent()
                 )

@@ -17,7 +17,9 @@ object DateTimeUtil {
 
 fun now() = Clock.System.now()
 
-fun LocalDate.text(): String = "${dayOfMonth}/$monthNumber/$year"
+fun LocalDate.text(): String = "$dayOfMonth/$monthNumber/$year"
+
+fun LocalDateTime.text(): String = "$dayOfMonth/$monthNumber/$year - $hour:$minute:$second"
 
 fun nowAsJakartaDateTime() = now().toJakartaDateTime()
 

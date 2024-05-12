@@ -98,7 +98,7 @@ private fun ForecastItem(
 ) {
     val weather = forecast.summary
     val weatherCondition = forecast.summary.code.asWeatherCondition()
-    val date = weather.timestamp.date
+    val date = weather.dateTime.date
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -110,7 +110,7 @@ private fun ForecastItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                icon = weatherCondition.icon(weather.timestamp.hour),
+                icon = weatherCondition.icon(weather.dateTime.hour),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))

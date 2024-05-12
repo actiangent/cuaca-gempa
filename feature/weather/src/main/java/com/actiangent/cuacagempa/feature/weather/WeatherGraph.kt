@@ -90,7 +90,7 @@ internal fun WeatherGraph(
 
                     val textY = size.height - (size.height * 0.25f)
                     weathers.forEachIndexed { index, weather ->
-                        val dateTime = weather.timestamp
+                        val dateTime = weather.dateTime
                         val hourMinuteTextLayoutResult = textMeasurer.measure(
                             text = "${dateTime.time}"
                         )

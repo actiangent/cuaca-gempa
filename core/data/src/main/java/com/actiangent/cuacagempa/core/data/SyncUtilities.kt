@@ -1,5 +1,6 @@
 package com.actiangent.cuacagempa.core.data
 
+import com.actiangent.cuacagempa.core.network.model.NetworkEarthquake
 import com.actiangent.cuacagempa.core.network.model.NetworkRegencyWeather
 import kotlinx.datetime.DateTimePeriod
 
@@ -42,6 +43,27 @@ suspend fun WeatherSynchronizer.changeRegencyWeatherSync(
     modelDeleter()
 }
 
+interface EarthquakeSyncable {
+
+    suspend fun syncWith(synchronizer: EarthquakeSynchronizer)
+}
+
+interface EarthquakeSynchronizer {
+
+    suspend fun EarthquakeSyncable.sync() =
+        this@sync.syncWith(this@EarthquakeSynchronizer)
+}
+
+suspend fun EarthquakeSynchronizer.changeEarthquakeSync(
+    earthquakeFetcher: suspend () -> List<NetworkEarthquake>,
+    modelInserter: suspend (List<NetworkEarthquake>) -> Unit,
+    modelDeleter: suspend () -> Unit,
+) {
+    val data = earthquakeFetcher()
+    modelInserter(data)
+
+    modelDeleter()
+}
 
 
 

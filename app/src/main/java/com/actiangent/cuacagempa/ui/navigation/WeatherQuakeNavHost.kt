@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.actiangent.cuacagempa.feature.weather.navigation.WEATHER_GRAPH_ROUTE
+import com.actiangent.cuacagempa.earthquake.navigation.earthquakeScreen
+import com.actiangent.cuacagempa.feature.weather.navigation.WEATHER_GRAPH_ROUTE_PATTERN
 import com.actiangent.cuacagempa.feature.weather.navigation.navigateToManageUserRegency
 import com.actiangent.cuacagempa.feature.weather.navigation.navigateToRegencyWeather
 import com.actiangent.cuacagempa.feature.weather.navigation.weatherGraph
@@ -18,7 +18,7 @@ fun WeatherQuakeNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = WEATHER_GRAPH_ROUTE,
+        startDestination = WEATHER_GRAPH_ROUTE_PATTERN,
         modifier = modifier,
     ) {
         weatherGraph(
@@ -27,6 +27,8 @@ fun WeatherQuakeNavHost(
             onManageUserRegencyClick = navController::navigateToManageUserRegency,
             onRegencyClick = navController::navigateToRegencyWeather
         )
-        composable("earthquake_route") {}
+        earthquakeScreen(
+            onSettingClick = {}
+        )
     }
 }

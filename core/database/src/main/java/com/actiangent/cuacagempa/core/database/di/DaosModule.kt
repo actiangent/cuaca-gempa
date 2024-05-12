@@ -1,6 +1,7 @@
 package com.actiangent.cuacagempa.core.database.di
 
 import com.actiangent.cuacagempa.core.database.WeatherQuakeDatabase
+import com.actiangent.cuacagempa.core.database.dao.EarthquakeDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceFtsDao
 import com.actiangent.cuacagempa.core.database.dao.RegencyDao
@@ -39,4 +40,9 @@ object DaosModule {
     fun providesWeatherDao(
         database: WeatherQuakeDatabase,
     ): WeatherDao = database.weatherDao()
+
+    @Provides
+    fun providesEarthquakeDao(
+        database: WeatherQuakeDatabase,
+    ): EarthquakeDao = database.earthquakeDao()
 }

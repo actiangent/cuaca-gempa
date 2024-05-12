@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(project(":feature:weather"))
+    implementation(project(":feature:earthquake"))
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtimeCompose

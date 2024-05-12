@@ -8,7 +8,7 @@ data class NetworkRegencyWeather(
 )
 
 data class NetworkWeather(
-    val timestamp: Instant,
+    val datetime: Instant,
     val weatherCode: Int,
     val temperatureCelsius: Double,
     val temperatureFahrenheit: Double,

@@ -46,13 +46,12 @@ class MainActivityViewModel @Inject constructor(
     private val _locationRequestError: MutableStateFlow<String?> = MutableStateFlow(null)
     private val _showPermissionDialog: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    val uiState: StateFlow<MainActivityUiState> = merge(
-        userRegencyIds.take(1),
-        userRegencyIds.drop(1).debounce(5000L)
-    )
-        .onEach {
-            syncManager.startWeatherSyncWork()
-        }
+    init {
+        syncManager.startEarthquakeSyncWork()
+    }
+
+    // TODO - refetch when userRegencyIds change, but not on first value emitted
+    val uiState: StateFlow<MainActivityUiState> = userRegencyIds
         .map { regencyIds ->
             MainActivityUiState.Success(
                 isLocationCached = regencyIds.isNotEmpty()

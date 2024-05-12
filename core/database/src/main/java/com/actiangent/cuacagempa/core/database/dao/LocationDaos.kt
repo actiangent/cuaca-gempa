@@ -173,6 +173,28 @@ interface RegencyDao {
 
     @Query(
         """
+        SELECT 
+            regency.id AS id, 
+            regency_l10n_en.name AS name, 
+            province.id AS provinceId, 
+            province_l10n_en.name AS provinceName 
+        FROM regency 
+        JOIN regency_l10n_en ON regency.id == regency_l10n_en.regency_id 
+        JOIN province ON regency.province_id == province.id
+        JOIN province_l10n_en ON province.id == province_l10n_en.province_id
+        ORDER BY
+            ABS(regency.latitude - :latitude) + ABS(regency.longitude - :longitude) ASC
+        LIMIT
+            1
+    """
+    )
+    suspend fun getOneOffRegencyByNearestLatLon(
+        latitude: Double,
+        longitude: Double
+    ): RawRegency
+
+    @Query(
+        """
         SELECT
             *
         FROM

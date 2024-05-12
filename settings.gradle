@@ -22,9 +22,11 @@ include ':core:model',
         ':core:network',
         ':core:ui'
 
-include ':feature:weather'
 include ':core:database'
 include ':core:common'
 include ':core:designsystem'
 include ':core:datastore'
+include ':feature:earthquake'
+include ':feature:weather'
 include ':sync:work'
+

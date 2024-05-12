@@ -28,7 +28,7 @@ class LocalDateTimeTypeConverter {
     }
 
     @TypeConverter
-    fun instantToString(dateTime: LocalDateTimeTypeConverter?): String? {
+    fun dateTimeToString(dateTime: LocalDateTimeTypeConverter?): String? {
         return dateTime?.toString()
     }
 

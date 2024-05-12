@@ -9,3 +9,4 @@ val SyncConstraints
         .build()
 
 const val WEATHER_SYNC_WORK_NAME = "weatherSyncWork"
+const val EARTHQUAKE_SYNC_WORK_NAME = "earthquakeSyncWork"

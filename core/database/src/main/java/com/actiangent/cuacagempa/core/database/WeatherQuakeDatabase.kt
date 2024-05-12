@@ -3,11 +3,13 @@ package com.actiangent.cuacagempa.core.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.actiangent.cuacagempa.core.database.dao.EarthquakeDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceFtsDao
 import com.actiangent.cuacagempa.core.database.dao.RegencyDao
 import com.actiangent.cuacagempa.core.database.dao.RegencyFtsDao
 import com.actiangent.cuacagempa.core.database.dao.WeatherDao
+import com.actiangent.cuacagempa.core.database.model.EarthquakeEntity
 import com.actiangent.cuacagempa.core.database.model.ProvinceEntity
 import com.actiangent.cuacagempa.core.database.model.ProvinceL10nEnEntity
 import com.actiangent.cuacagempa.core.database.model.ProvinceL10nEnFtsEntity
@@ -35,6 +37,7 @@ import com.actiangent.cuacagempa.core.database.util.LocalDateTimeTypeConverter
         RegencyL10nEnFtsEntity::class,
         RegencyL10nIdFtsEntity::class,
         RegencyWeatherEntity::class,
+        EarthquakeEntity::class,
     ],
     version = 1,
     exportSchema = false
@@ -54,4 +57,6 @@ abstract class WeatherQuakeDatabase : RoomDatabase() {
     abstract fun provinceFtsDao(): ProvinceFtsDao
 
     abstract fun regencyFtsDao(): RegencyFtsDao
+
+    abstract fun earthquakeDao(): EarthquakeDao
 }

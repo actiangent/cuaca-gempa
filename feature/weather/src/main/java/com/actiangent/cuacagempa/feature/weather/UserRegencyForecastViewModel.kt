@@ -57,7 +57,7 @@ class UserRegencyForecastViewModel @Inject constructor(
         .flatMapLatest { regencyIds ->
             selectedUserRegencyIndex
                 .takeWhile { index ->
-                    (index < regencyIds.size)
+                    (index in 0..regencyIds.size)
                         .also { isNotIndexOutOfBounds ->
                             if (!isNotIndexOutOfBounds) {
                                 savedStateHandle["selectedUserRegencyId"] = (regencyIds.size - 1)

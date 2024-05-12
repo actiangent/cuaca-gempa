@@ -1,6 +1,7 @@
 package com.actiangent.cuacagempa.core.data.repository.weather
 
 import com.actiangent.cuacagempa.core.common.result.Result
+import com.actiangent.cuacagempa.core.common.result.asResult
 import com.actiangent.cuacagempa.core.data.WeatherSynchronizer
 import com.actiangent.cuacagempa.core.data.changeRegencyWeatherSync
 import com.actiangent.cuacagempa.core.data.model.asRegencyWeatherEntity
@@ -52,7 +53,7 @@ class DefaultWeatherRepository @Inject constructor(
     override fun getRemoteWeatherForecast(
         regencyId: String,
         temperatureUnit: TemperatureUnit
-    ): Flow<List<Forecast>> = flow {
+    ): Flow<Result<List<Forecast>>> = flow {
         val provinceEntity = provinceDao.getOneOffProvinceEntityByRegencyId(regencyId)
         val networkRegencyWeathers = remoteWeatherDataSource.getRegencyWeathers(
             provinceEndpoint = provinceEntity.endpoint,
@@ -62,7 +63,7 @@ class DefaultWeatherRepository @Inject constructor(
         val weathers = networkRegencyWeathers.networkWeathers.map { networkWeather ->
             with(networkWeather) {
                 Weather(
-                    timestamp = timestamp.toLocalDateTime(TimeZone.of("Asia/Jakarta")),
+                    dateTime = datetime.toLocalDateTime(TimeZone.of("Asia/Jakarta")),
                     code = weatherCode,
                     temperature = when (temperatureUnit) {
                         TemperatureUnit.CELSIUS -> temperatureCelsius
@@ -79,7 +80,7 @@ class DefaultWeatherRepository @Inject constructor(
         emit(
             forecasts.subList(0, forecasts.size - 1)
         )
-    }
+    }.asResult()
 
     override suspend fun syncByRegencyIdWith(
         regencyId: String,
@@ -103,7 +104,7 @@ class DefaultWeatherRepository @Inject constructor(
             regencyWeatherDao.insertRegencyWeathers(crossRefRegencyWeatherEntities)
         },
         modelDeleter = {
-            regencyWeatherDao.deleteOldWeatherCache()
+            regencyWeatherDao.deleteOldRegencyWeathers()
         },
         shouldSaveRegencyId = false,
     )
@@ -139,7 +140,7 @@ class DefaultWeatherRepository @Inject constructor(
                 regencyWeatherDao.insertRegencyWeathers(crossReffRegencyWeatherEntities)
             },
             modelDeleter = {
-                regencyWeatherDao.deleteOldWeatherCache()
+                regencyWeatherDao.deleteOldRegencyWeathers()
             },
             shouldSaveRegencyId = true,
         )

@@ -6,12 +6,15 @@ import com.actiangent.cuacagempa.core.data.repository.CompositeUserDistrictWeath
 import com.actiangent.cuacagempa.core.data.repository.DefaultRegencyRepository
 import com.actiangent.cuacagempa.core.data.repository.RegencyRepository
 import com.actiangent.cuacagempa.core.data.repository.UserDistrictWeatherRepository
+import com.actiangent.cuacagempa.core.data.repository.earthquake.DefaultEarthquakeRepository
+import com.actiangent.cuacagempa.core.data.repository.earthquake.EarthquakeRepository
 import com.actiangent.cuacagempa.core.data.repository.location.DefaultLocationRepository
 import com.actiangent.cuacagempa.core.data.repository.location.LocationRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.DefaultUserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.preferences.UserDataRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.DefaultWeatherRepository
 import com.actiangent.cuacagempa.core.data.repository.weather.WeatherRepository
+import com.actiangent.cuacagempa.core.database.dao.EarthquakeDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceDao
 import com.actiangent.cuacagempa.core.database.dao.ProvinceFtsDao
 import com.actiangent.cuacagempa.core.database.dao.RegencyDao
@@ -20,6 +23,7 @@ import com.actiangent.cuacagempa.core.database.dao.WeatherDao
 import com.actiangent.cuacagempa.core.datastore.WeatherQuakePreferencesDataSource
 import com.actiangent.cuacagempa.core.location.LocationDataSource
 import com.actiangent.cuacagempa.core.location.LocationProvider
+import com.actiangent.cuacagempa.core.network.RemoteEarthquakeDataSource
 import com.actiangent.cuacagempa.core.network.RemoteWeatherDataSource
 import dagger.Module
 import dagger.Provides
@@ -80,4 +84,12 @@ object RepositoriesModule {
     ): RegencyRepository =
         DefaultRegencyRepository(provinceDao, regencyDao, provinceFtsDao, regencyFtsDao)
 
+    @Singleton
+    @Provides
+    fun provideEarthquakeRepository(
+        regencyDao: RegencyDao,
+        earthquakeDao: EarthquakeDao,
+        remoteEarthquakeDataSource: RemoteEarthquakeDataSource,
+    ): EarthquakeRepository =
+        DefaultEarthquakeRepository(regencyDao, earthquakeDao, remoteEarthquakeDataSource)
 }

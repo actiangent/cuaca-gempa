@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -32,29 +33,34 @@ class RegencyWeatherViewModel @Inject constructor(
     val regencyWeatherUiState: StateFlow<RegencyWeatherUiState> = userDataRepository.userData
         .flatMapLatest { userData ->
             combine(
-                regencyRepository.getRegency(regencyId),
+                regencyRepository.getRegency(regencyId).asResult(),
                 weatherRepository.getRemoteWeatherForecast(regencyId, userData.temperatureUnit)
             ) { regency, forecasts ->
-                SaveableRegency(
-                    regency = regency,
-                    isSaved = regency.id in userData.userRegencyIds
-                ) to forecasts
+                regency to forecasts
             }
         }
-        .asResult()
-        .map { result ->
-            when (result) {
+        .map { (regencyResult, forecastsResult) ->
+            when (regencyResult) {
                 Result.Loading -> RegencyWeatherUiState.Loading
 
                 is Result.Success -> {
-                    val (regency, forecasts) = result.data
-                    RegencyWeatherUiState.Success(
-                        regency = regency,
-                        forecasts = forecasts,
-                    )
+                    when (forecastsResult) {
+                        Result.Loading -> RegencyWeatherUiState.Loading
+                        is Result.Success -> {
+                            RegencyWeatherUiState.Success(
+                                regency = SaveableRegency(
+                                    regency = regencyResult.data,
+                                    isSaved = regencyResult.data.id in userDataRepository.userData.first().userRegencyIds
+                                ),
+                                forecasts = forecastsResult.data
+                            )
+                        }
+
+                        is Result.Error -> RegencyWeatherUiState.Error(message = forecastsResult.message)
+                    }
                 }
 
-                is Result.Error -> RegencyWeatherUiState.Error(message = result.message)
+                is Result.Error -> RegencyWeatherUiState.Error(message = regencyResult.message)
             }
         }
         .stateIn(

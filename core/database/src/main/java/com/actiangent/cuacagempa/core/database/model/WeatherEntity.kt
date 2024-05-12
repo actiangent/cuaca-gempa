@@ -16,14 +16,15 @@ import kotlinx.datetime.Instant
             childColumns = ["regency_id"],
         )
     ],
-    indices = [Index(value = ["timestamp"])]
+    indices = [Index(value = ["datetime"])]
 )
 data class RegencyWeatherEntity(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val timestamp: Instant,
+    @ColumnInfo(name = "datetime")
+    val dateTime: Instant,
 
     @ColumnInfo(name = "weather_code")
     val weatherCode: Int,

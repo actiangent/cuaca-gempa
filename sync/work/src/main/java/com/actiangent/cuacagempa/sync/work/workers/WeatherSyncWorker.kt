@@ -54,5 +54,4 @@ class WeatherSyncWorker @AssistedInject constructor(
             .setConstraints(SyncConstraints)
             .build()
     }
-
 }
