@@ -1,5 +1,6 @@
 package com.actiangent.cuacagempa.core.data.repository.preferences
 
+import com.actiangent.cuacagempa.core.model.DarkThemeConfig
 import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,6 @@ interface UserDataRepository {
     suspend fun setUserRegencyIdSaved(regencyId: String, saved: Boolean)
 
     suspend fun setTemperatureUnit(unit: TemperatureUnit)
+
+    suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig)
 }

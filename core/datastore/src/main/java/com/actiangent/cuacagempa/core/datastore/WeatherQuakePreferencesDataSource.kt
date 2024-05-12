@@ -2,6 +2,7 @@ package com.actiangent.cuacagempa.core.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.actiangent.cuacagempa.core.model.DarkThemeConfig
 import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -24,6 +25,19 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
                     TemperatureUnitsProto.TEMPERATURE_CELSIUS -> TemperatureUnit.CELSIUS
 
                     TemperatureUnitsProto.TEMPERATURE_FAHRENHEIT -> TemperatureUnit.FAHRENHEIT
+                },
+                darkThemeConfig = when (userPreferences.darkThemeConfig) {
+                    null,
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_UNSPECIFIED,
+                    DarkThemeConfigProto.UNRECOGNIZED,
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_FOLLOW_SYSTEM,
+                    ->
+                        DarkThemeConfig.FOLLOW_SYSTEM
+
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_LIGHT ->
+                        DarkThemeConfig.LIGHT
+
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_DARK -> DarkThemeConfig.DARK
                 },
                 hasDoneOnboarding = true
             )
@@ -90,9 +104,31 @@ class WeatherQuakePreferencesDataSource @Inject constructor(
         }
     }
 
+    suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+        try {
+            userPreferences.updateData {
+                it.copy {
+                    this.darkThemeConfig = when (darkThemeConfig) {
+                        DarkThemeConfig.FOLLOW_SYSTEM ->
+                            DarkThemeConfigProto.DARK_THEME_CONFIG_FOLLOW_SYSTEM
+
+                        DarkThemeConfig.LIGHT -> DarkThemeConfigProto.DARK_THEME_CONFIG_LIGHT
+                        DarkThemeConfig.DARK -> DarkThemeConfigProto.DARK_THEME_CONFIG_DARK
+                    }
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("WeatherQuakePreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
     suspend fun setHasDoneOnboarding(hasDoneOnboarding: Boolean) {
-        userPreferences.updateData {
-            it.copy { this.hasDoneOnboarding = hasDoneOnboarding }
+        try {
+            userPreferences.updateData {
+                it.copy { this.hasDoneOnboarding = hasDoneOnboarding }
+            }
+        } catch (ioException: IOException) {
+            Log.e("WeatherQuakePreferences", "Failed to update user preferences", ioException)
         }
     }
 

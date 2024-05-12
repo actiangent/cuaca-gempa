@@ -1,13 +1,14 @@
 syntax = "proto3";
 
 import "com/actiangent/cuacagempa/data/temperature_units.proto";
+import "com/actiangent/cuacagempa/data/dark_theme_config.proto";
 
 option java_package = "com.actiangent.cuacagempa.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
   // reserved 2, 8 to 10;
-  reserved 2, 4, 5 to 10;
+  reserved 2, 4, 5, 7 to 10;
 
   map<string, bool> user_regency_ids = 1;
 
@@ -15,7 +16,7 @@ message UserPreferences {
   // wind_direction_unit = 4;
   // wind_speed_unit = 5;
 
-  // dark_theme_config = 6;
+  DarkThemeConfigProto dark_theme_config = 6;
   // material_you = 7;
 
   bool has_done_onboarding = 11;

@@ -1,9 +1,9 @@
 buildscript {
     ext {
         // Sdk
-        compileSdkVersion = 33
+        compileSdkVersion = 34
         minSdkVersion = 23
-        targetSdkVersion = 33
+        targetSdkVersion = 34
 
         composeCompilerVersion = '1.4.4'
     }

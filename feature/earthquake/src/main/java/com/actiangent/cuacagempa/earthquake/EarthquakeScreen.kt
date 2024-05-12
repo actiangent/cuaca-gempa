@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -56,86 +57,89 @@ private fun EarthquakeScreen(
     onSettingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Earthquake",
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            },
-            actions = {
-                IconButton(
-                    onClick = onSettingClick,
-                ) {
-                    Icon(
-                        icon = WeatherQuakeIcons.SettingsFilled,
-                        contentDescription = null,
-                    )
-                }
-            },
-        )
-        when (earthquakeUiState) {
-            EarthquakeUiState.Loading -> {
-                Box(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is EarthquakeUiState.Success -> {
-                val recentEarthquake = earthquakeUiState.recentEarthquake
-                val latestCautiousEarthquakes = earthquakeUiState.latestCautiousEarthquakes
-
-                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    item {
-                        Text(
-                            text = "Recent Earthquake",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                        )
-                    }
-                    item {
-                        EarthquakeItem(earthquake = recentEarthquake)
-                    }
-                    item {
-                        Text(
-                            text = "Latest Cautious Earthquake",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                        )
-                    }
-                    itemsIndexed(
-                        items = latestCautiousEarthquakes,
-                        key = { index, _ -> index }
-                    ) { _, earthquake ->
-                        EarthquakeItem(earthquake = earthquake)
-                    }
-                }
-            }
-
-            is EarthquakeUiState.Error -> {
-                Box(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+    Surface {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+        ) {
+            TopAppBar(
+                title = {
                     Text(
-                        text = earthquakeUiState.message,
-                        fontWeight = FontWeight.Light,
-                        style = MaterialTheme.typography.bodyLarge,
+                        text = "Earthquake",
+                        style = MaterialTheme.typography.titleLarge,
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = onSettingClick,
+                    ) {
+                        Icon(
+                            icon = WeatherQuakeIcons.SettingsFilled,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
+                },
+            )
+            when (earthquakeUiState) {
+                EarthquakeUiState.Loading -> {
+                    Box(
+                        modifier = modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is EarthquakeUiState.Success -> {
+                    val recentEarthquake = earthquakeUiState.recentEarthquake
+                    val latestCautiousEarthquakes = earthquakeUiState.latestCautiousEarthquakes
+
+                    LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        item {
+                            Text(
+                                text = "Recent Earthquake",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                            )
+                        }
+                        item {
+                            EarthquakeItem(earthquake = recentEarthquake)
+                        }
+                        item {
+                            Text(
+                                text = "Latest Cautious Earthquake",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                            )
+                        }
+                        itemsIndexed(
+                            items = latestCautiousEarthquakes,
+                            key = { index, _ -> index }
+                        ) { _, earthquake ->
+                            EarthquakeItem(earthquake = earthquake)
+                        }
+                    }
+                }
+
+                is EarthquakeUiState.Error -> {
+                    Box(
+                        modifier = modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = earthquakeUiState.message,
+                            fontWeight = FontWeight.Light,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
                 }
             }
         }

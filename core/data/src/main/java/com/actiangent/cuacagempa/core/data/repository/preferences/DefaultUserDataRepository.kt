@@ -1,6 +1,7 @@
 package com.actiangent.cuacagempa.core.data.repository.preferences
 
 import com.actiangent.cuacagempa.core.datastore.WeatherQuakePreferencesDataSource
+import com.actiangent.cuacagempa.core.model.DarkThemeConfig
 import com.actiangent.cuacagempa.core.model.TemperatureUnit
 import com.actiangent.cuacagempa.core.model.UserData
 import kotlinx.coroutines.flow.Flow
@@ -26,5 +27,9 @@ class DefaultUserDataRepository @Inject constructor(
 
     override suspend fun setTemperatureUnit(unit: TemperatureUnit) {
         weatherQuakePreferences.setTemperatureUnit(unit)
+    }
+
+    override suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+        weatherQuakePreferences.setDarkThemeConfig(darkThemeConfig)
     }
 }
