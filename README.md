@@ -1,35 +1,31 @@
 # Cuaca & Gempa
 
-This project is a **work in progress**, certain features and functionalities may be added or
-modified in future updates.
-
-## Introduction
-
 Cuaca & Gempa (english: Weather & Earthquake) is an Android application that serves weather forecast
 data and earthquake information sourced from [Data Terbuka BMKG](https://data.bmkg.go.id).
 
+### Screenshots
+
+![Cuaca & Gempa](art/screenshots.png)
+
+This project is a **work in progress**, some features and functionalities may be added or
+modified in future updates.
+
 ## Background
 
-This project serves as case study for learning and acquiring practical knowledge
-of [android/nowinandroid](https://github.com/android/nowinandroid).
+This project serves as a case study for applying modern Android development practices, 
+including design, architecture, and modularization, 
+demonstrated in the [Now in Android](https://github.com/android/nowinandroid).
 
 ## Features
 
-The Cuaca & Gempa project will include the following features:
-
-1. Weather Forecast: The application will provide users with weather forecast data. It will fetch
-   the necessary information from
-   the [Data Cuaca Terbuka BMKG](https://data.bmkg.go.id/prakiraan-cuaca/) platform and present it
-   in a user-friendly format.
-
-2. Earthquake Information: The application will also provide information about earthquakes. It will
-   retrieve earthquake data from
-   the [Data Gempabumi Terbuka BMKG](https://data.bmkg.go.id/gempabumi/) platform and display
-   relevant details such as magnitude, location, and time.
+* Daily and 6-hourly weather forecasts for the next 3 days 
+* Up-to-date earthquake information 
+* Offline-first support 
+* Material 3 UI 
+* Dark mode
 
 ## Credits
 
-* **BMKG** (Badan Meteorologi, Klimatologi, dan Geofisika) - The Indonesian Agency for Meteorology,
-  Climatology, and Geophysics. They have made their data available
-  through [Data Terbuka BMKG](https://data.bmkg.go.id) platform, which serves as a valuable resource
+* Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) / Meteorology, Climatology, and Geophysical Agency -
+  They have made their data available through [Data Terbuka BMKG](https://data.bmkg.go.id) platform, which serves as a valuable resource
   for this project.
