@@ -5,7 +5,7 @@ data and earthquake information sourced from [Data Terbuka BMKG](https://data.bm
 
 ### Screenshots
 
-![Cuaca & Gempa](art/screenshots.png)
+![Cuaca & Gempa](art/screenshots.jpg)
 
 This project is a **work in progress**, some features and functionalities may be added or
 modified in future updates.
