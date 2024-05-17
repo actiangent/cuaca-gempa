@@ -28,7 +28,7 @@ class MainActivityViewModel @Inject constructor(
     private val _showPermissionDialog: MutableStateFlow<String?> = MutableStateFlow(null)
 
     init {
-        // syncManager.startEarthquakeSyncWork()
+        syncManager.startEarthquakeSyncWork()
     }
 
     // TODO - refetch when userRegencyIds change, but not on first value emitted
@@ -63,7 +63,7 @@ class MainActivityViewModel @Inject constructor(
             if (!locationRepository.isGpsEnabled()) {
                 showLocationRequestError()
             } else {
-                // syncManager.startWeatherSyncWork()
+                syncManager.startWeatherSyncWork()
             }
         }
     }

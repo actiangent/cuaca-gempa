@@ -65,6 +65,10 @@ dependencies {
     implementation(project(":feature:weather"))
     implementation(project(":feature:earthquake"))
 
+    def composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtimeCompose
 
